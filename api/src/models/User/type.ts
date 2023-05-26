@@ -16,5 +16,5 @@ export class User {
   tokenVersion: number;
 
   @Field((type) => [Schedule])
-  schedules: Promise<Schedule[]>;
+  schedules?: Promise<Schedule[]>;
 }

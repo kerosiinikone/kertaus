@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import express from "express";
+import express, { Response } from "express";
 import { ApolloServer } from "@apollo/server";
 import http from "http";
 import cookieParser from "cookie-parser";
@@ -12,6 +12,10 @@ import { startPrisma } from "./db.ts";
 import { AuthResolver, UserResolver } from "./src/models/User/resolver.ts";
 import pkg from "body-parser";
 const { json } = pkg;
+
+export interface ContextType {
+  res: Response;
+}
 
 dotenv.config();
 
@@ -24,7 +28,7 @@ const main = async () => {
   const app = express();
   const httpServer = http.createServer(app);
 
-  const client = new ApolloServer({
+  const client = new ApolloServer<ContextType>({
     schema,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
@@ -39,7 +43,11 @@ const main = async () => {
       origin: process.env.CLIENT_URL,
     }),
     json(),
-    expressMiddleware(client)
+    expressMiddleware(client, {
+      context: async ({ res }) => ({
+        res,
+      }),
+    })
   );
 
   await new Promise<void>((resolve) =>
