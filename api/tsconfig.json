@@ -1,11 +1,8 @@
 {
-  "extends": ["../tsconfig.json"],
+  "extends": "../tsconfig.json",
   "references": [{ "path": "../shared" }],
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
-    "lib": ["es2018", "esnext.asynciterable"],
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "noEmit": true,
+    "allowImportingTsExtensions": true
   }
 }
