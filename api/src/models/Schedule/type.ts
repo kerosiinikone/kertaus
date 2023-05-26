@@ -2,6 +2,15 @@ import { Field, ObjectType, ID } from "type-graphql";
 import { User } from "../User/type.ts";
 
 @ObjectType()
+export class ScheduleRaw {
+  @Field()
+  json: string;
+
+  @Field(() => Schedule)
+  schedule: Promise<Schedule>;
+}
+
+@ObjectType()
 export class Schedule {
   @Field((type) => ID)
   id: string;
@@ -9,9 +18,9 @@ export class Schedule {
   @Field()
   name: string;
 
-  @Field()
-  password: string;
+  @Field(() => ScheduleRaw)
+  content: ScheduleRaw;
 
-  @Field((type) => User)
+  @Field(() => User)
   author: Promise<User>;
 }

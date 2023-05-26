@@ -9,7 +9,7 @@ import http from "http";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { startPrisma } from "./db.ts";
-import { UserResolver } from "./src/User/resolver.ts";
+import { AuthResolver, UserResolver } from "./src/models/User/resolver.ts";
 import pkg from "body-parser";
 const { json } = pkg;
 
@@ -17,7 +17,7 @@ dotenv.config();
 
 const main = async () => {
   const schema = await buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver, AuthResolver],
   });
 
   await startPrisma();
