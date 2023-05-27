@@ -23,7 +23,6 @@ export const requestSchedule = async (input: PromptInput) => {
   } catch (error) {
     throw error;
   }
-  return;
 };
 
 const generatePrompt = (input: PromptInput) => {
@@ -31,8 +30,6 @@ const generatePrompt = (input: PromptInput) => {
 
   switch (input.subjectType) {
     case CodeType.SUBJECT:
-      console.log(input.courses);
-
       const listOfTopics = input.courses.map((course) => course.name);
       let topics = listOfTopics.join(", ");
       prompt += `lukion aineesta ${input.subject.toLowerCase()}, jossa käsittelet ainakin seuraavia aiheita: ${topics}`;
@@ -45,6 +42,8 @@ const generatePrompt = (input: PromptInput) => {
   }
 
   prompt += `, ja jonka kesto on ${input.timePeriod.toLowerCase()}.`;
+  prompt +=
+    " " + `Aikataulun intensiteetin on vastattava tasoa ${input.intensity}`;
   prompt +=
     " " +
     "Anna vastaus pelkkänä JSON-formaattina jokaiselta päivältä listana, jossa päivillä ei ole nimiä seuraavan kaavan mukaan: " +

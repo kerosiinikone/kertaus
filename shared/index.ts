@@ -11,13 +11,6 @@ export interface ContextType {
   res: Response;
 }
 
-export enum Periods {
-  "WEEK" = "1 viikko",
-  "TWOWEEKS" = "2 viikkoa",
-  "FIVE" = "5 päivää",
-  "OTHER" = "Muu",
-}
-
 export enum Intensities {
   "EASY" = "Helppo",
   "INTERMEDIATE" = "Keskitaso",
