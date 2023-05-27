@@ -26,28 +26,33 @@ export const requestSchedule = async (input: PromptInput) => {
 };
 
 const generatePrompt = (input: PromptInput) => {
-  let prompt: string = "";
+  let prompt: Array<string> = [];
 
   switch (input.subjectType) {
     case CodeType.SUBJECT:
       const listOfTopics = input.courses.map((course) => course.name);
       let topics = listOfTopics.join(", ");
-      prompt += `lukion aineesta ${input.subject.toLowerCase()}, jossa käsittelet ainakin seuraavia aiheita: ${topics}`;
+      prompt.push(
+        `lukion aineesta ${input.subject.toLowerCase()}, jossa käsittelet ainakin seuraavia aiheita: ${topics}`
+      );
       break;
     case CodeType.COURSE:
-      prompt += `lukion oppimäärän mukaisesti aiheesta ${input.subject.toLowerCase()}`;
+      prompt.push(
+        `lukion oppimäärän mukaisesti aiheesta ${input.subject.toLowerCase()}`
+      );
       break;
     default:
       break;
   }
 
-  prompt += `, ja jonka kesto on ${input.timePeriod.toLowerCase()}.`;
-  prompt +=
-    " " + `Aikataulun intensiteetin on vastattava tasoa ${input.intensity}`;
-  prompt +=
-    " " +
-    "Anna vastaus pelkkänä JSON-formaattina jokaiselta päivältä listana, jossa päivillä ei ole nimiä seuraavan kaavan mukaan: " +
-    JSON_FORMAT_RESPONSE;
+  prompt.push(`ja jonka kesto on ${input.timePeriod.toLowerCase()}.`);
+  prompt.push(
+    `Aikataulun intensiteetin on vastattava tasoa ${input.intensity}.`
+  );
+  prompt.push(
+    "Anna vastaus pelkkänä JSON-formaattina jokaiselta päivältä listana, jossa päivillä ei ole nimiä seuraavan kaavan mukaan:"
+  );
+  prompt.push(JSON_FORMAT_RESPONSE);
 
-  return PRE_PROMPT + prompt;
+  return PRE_PROMPT + prompt.join(" ");
 };
