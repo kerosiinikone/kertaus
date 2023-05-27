@@ -3,25 +3,24 @@ import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import express, { Response } from "express";
+import express from "express";
 import { ApolloServer } from "@apollo/server";
 import http from "http";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { startPrisma } from "./db.ts";
-import { AuthResolver, UserResolver } from "./src/models/User/resolver.ts";
+import { UserResolver } from "./src/models/User/userResolver.ts";
 import pkg from "body-parser";
+import { AuthResolver } from "./src/models/User/authResolver.ts";
+import { ContextType } from "../shared/index.ts";
+import { ScheduleResolver } from "./src/models/Schedule/resolver.ts";
 const { json } = pkg;
-
-export interface ContextType {
-  res: Response;
-}
 
 dotenv.config();
 
 const main = async () => {
   const schema = await buildSchema({
-    resolvers: [UserResolver, AuthResolver],
+    resolvers: [UserResolver, AuthResolver, ScheduleResolver],
   });
 
   await startPrisma();
