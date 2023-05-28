@@ -1,12 +1,4 @@
-import {
-  Resolver,
-  Mutation,
-  Arg,
-  Ctx,
-  Args,
-  Query,
-  UseMiddleware,
-} from "type-graphql";
+import { Resolver, Mutation, Arg, Ctx, UseMiddleware } from "type-graphql";
 import { User } from "../type.js";
 import {
   createUser,
@@ -66,7 +58,7 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(authenticationMethod)
-  async logout(@Ctx() { res }: ContextType): Promise<boolean> {
+  logout(@Ctx() { res }: ContextType): boolean {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
     return true;

@@ -5,7 +5,7 @@ import authenticationMethod from "../../lib/util/auth/index.ts";
 
 @Resolver(Schedule)
 export class ScheduleResolver {
-  @UseMiddleware(authenticationMethod)
+  //@UseMiddleware(authenticationMethod)
   @Query(() => Schedule)
   async schedule(
     @Args()
@@ -18,8 +18,6 @@ export class ScheduleResolver {
       timePeriod,
       courses,
     });
-
-    console.log(response);
 
     const schedule: Schedule = {
       id: "",

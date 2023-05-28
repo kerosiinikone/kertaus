@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 
 export interface ScheduleSchema {
-  aiheet: string;
-  teoriat: string;
-  tehtavat: number;
+  aiheet: string[];
+  teoriat: string[];
+  tehtavananto: string;
   kesto: number;
 }
 

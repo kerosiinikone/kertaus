@@ -6,9 +6,9 @@ const DEFAULT_MODEL = "gpt-3.5-turbo";
 const PRE_PROMPT = `Tee minulle kertausaikataulu `;
 
 const JSON_FORMAT_RESPONSE = JSON.stringify({
-  aiheet: "aihe tai lista käsiteltävistä aiheista",
-  teoriat: "aiheen teoria tai lista aiheiden teorioista",
-  tehtavat: "tehtävien lukumäärä",
+  aiheet: "[aihe tai lista käsiteltävistä aiheista]",
+  teoriat: "[aiheen teoria tai lista aiheiden teorioista]",
+  tehtavananto: "tehtävänanto lyhyesti",
   kesto: "päivittäisen kertausajan kesto tunteina",
 });
 
