@@ -75,11 +75,10 @@ export const setCookies = (access: string, refresh: string, res: Response) => {
     ...defaultOptions,
     maxAge: 1000 * 60 * 15,
   });
-  if (refresh)
-    res.cookie("refreshToken", refresh, {
-      ...defaultOptions,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
+  res.cookie("refreshToken", refresh, {
+    ...defaultOptions,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  });
 };
 
 export const refreshTokens = (token: VerifiedRefreshToken, version: number) => {

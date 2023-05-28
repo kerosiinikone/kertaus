@@ -1,13 +1,14 @@
-import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
-import { User } from "./type.js";
+import { Resolver, Mutation, Arg, Ctx, Args } from "type-graphql";
+import { User } from "../type.js";
 import {
   createUser,
   getUserByParam,
-} from "../../lib/database/userOperations.js";
-import { comparePasswords, hashPassword } from "../../lib/util/crypt.js";
+} from "../../../lib/database/userOperations.js";
+import { comparePasswords, hashPassword } from "../../../lib/util/crypt.js";
 import { validate } from "email-validator";
-import { buildTokens, setCookies } from "../../lib/util/cookies.js";
-import type { ContextType } from "../../../../shared/index.js";
+import { buildTokens, setCookies } from "../../../lib/util/cookies.js";
+import type { ContextType } from "../../../../../shared/index.js";
+import { AuthInput } from "./type.js";
 
 @Resolver(User)
 export class AuthResolver {
@@ -15,8 +16,7 @@ export class AuthResolver {
 
   // MIDDLEWARE -> If logged in, Protect
   async register(
-    @Arg("email") email: string,
-    @Arg("password") password: string,
+    @Arg("input") { email, password }: AuthInput,
     @Ctx() context: ContextType
   ): Promise<User> {
     try {
@@ -43,8 +43,7 @@ export class AuthResolver {
 
   // MIDDLEWARE -> If logged in, Protect
   async login(
-    @Arg("email") email: string,
-    @Arg("password") password: string,
+    @Arg("input") { email, password }: AuthInput,
     @Ctx() context: ContextType
   ): Promise<User> {
     const user = await getUserByParam({ email });

@@ -14,10 +14,10 @@ registerEnumType(CodeType, {
 @ObjectType()
 export class ScheduleSchemaGraph {
   @Field()
-  aihe: string;
+  aiheet: string;
 
   @Field()
-  teoria: string;
+  teoriat: string;
 
   @Field()
   tehtavat: number;

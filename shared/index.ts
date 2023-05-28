@@ -1,14 +1,15 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 
 export interface ScheduleSchema {
-  aihe: string;
-  teoria: string;
+  aiheet: string;
+  teoriat: string;
   tehtavat: number;
   kesto: number;
 }
 
 export interface ContextType {
   res: Response;
+  req: Request;
 }
 
 export enum Intensities {

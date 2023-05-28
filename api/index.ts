@@ -11,11 +11,13 @@ import cors from "cors";
 import { startPrisma } from "./db.ts";
 import { UserResolver } from "./src/models/User/userResolver.ts";
 import pkg from "body-parser";
-import { AuthResolver } from "./src/models/User/authResolver.ts";
+import { AuthResolver } from "./src/models/User/auth/authResolver.ts";
 import { ContextType } from "../shared/index.ts";
 import { ScheduleResolver } from "./src/models/Schedule/resolver.ts";
-const { json } = pkg;
+import { refreshRouter } from "./src/routes/refresh.ts";
+import authenticationMethod from "./src/lib/util/auth/index.ts";
 
+const { json } = pkg;
 dotenv.config();
 
 const main = async () => {
@@ -39,15 +41,17 @@ const main = async () => {
     "/graphql",
     cors<cors.CorsRequest>({
       credentials: true,
-      origin: process.env.CLIENT_URL,
+      origin: [process.env.CLIENT_URL],
     }),
     json(),
     expressMiddleware(client, {
-      context: async ({ res }) => ({
+      context: async ({ res, req }) => ({
+        req,
         res,
       }),
     })
   );
+  app.use("/refresh", refreshRouter);
 
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: process.env.PORT }, resolve)

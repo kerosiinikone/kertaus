@@ -6,8 +6,8 @@ const DEFAULT_MODEL = "gpt-3.5-turbo";
 const PRE_PROMPT = `Tee minulle kertausaikataulu `;
 
 const JSON_FORMAT_RESPONSE = JSON.stringify({
-  aihe: "aihe lyhyesti",
-  teoria: "teoria lyhyesti",
+  aiheet: "aihe tai lista käsiteltävistä aiheista",
+  teoriat: "aiheen teoria tai lista aiheiden teorioista",
   tehtavat: "tehtävien lukumäärä",
   kesto: "päivittäisen kertausajan kesto tunteina",
 });
@@ -17,7 +17,7 @@ export const requestSchedule = async (input: PromptInput) => {
     const response = await openai.createChatCompletion({
       model: DEFAULT_MODEL,
       messages: [{ role: "user", content: generatePrompt(input) }],
-      temperature: 0.8,
+      temperature: 0.2,
     });
     return response.data.choices[0].message.content;
   } catch (error) {
@@ -33,24 +33,27 @@ const generatePrompt = (input: PromptInput) => {
       const listOfTopics = input.courses.map((course) => course.name);
       let topics = listOfTopics.join(", ");
       prompt.push(
-        `lukion aineesta ${input.subject.toLowerCase()}, jossa käsittelet ainakin seuraavia aiheita: ${topics}`
+        `lukion aineesta ${input.subject.toLowerCase()}, jossa käsittelet seuraavia aiheita: ${topics}.`
       );
       break;
     case CodeType.COURSE:
       prompt.push(
-        `lukion oppimäärän mukaisesti aiheesta ${input.subject.toLowerCase()}`
+        `lukion oppimäärän mukaisesti aiheesta ${input.subject.toLowerCase()}.`
       );
-      break;
-    default:
       break;
   }
 
-  prompt.push(`ja jonka kesto on ${input.timePeriod.toLowerCase()}.`);
+  prompt.push(
+    `Aikataulun keston on oltava tasan ${input.timePeriod.toLowerCase()}.`
+  );
   prompt.push(
     `Aikataulun intensiteetin on vastattava tasoa ${input.intensity}.`
   );
   prompt.push(
-    "Anna vastaus pelkkänä JSON-formaattina jokaiselta päivältä listana, jossa päivillä ei ole nimiä seuraavan kaavan mukaan:"
+    "Jos aiheita on enemmän kuin päiviä, yhdessä päivässä on oltava useampi aihe. Pysy annetun päivämäärän sisällä."
+  );
+  prompt.push(
+    "Anna vastaus JSON-formaatissa yhtenä listana siten, että jokaiselta päivältä on yksi olio, ja jossa päivillä ei ole nimiä seuraavan kaavan mukaan:"
   );
   prompt.push(JSON_FORMAT_RESPONSE);
 
