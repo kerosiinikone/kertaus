@@ -1,4 +1,12 @@
-import { Resolver, Mutation, Arg, Ctx, Args } from "type-graphql";
+import {
+  Resolver,
+  Mutation,
+  Arg,
+  Ctx,
+  Args,
+  Query,
+  UseMiddleware,
+} from "type-graphql";
 import { User } from "../type.js";
 import {
   createUser,
@@ -9,15 +17,14 @@ import { validate } from "email-validator";
 import { buildTokens, setCookies } from "../../../lib/util/cookies.js";
 import type { ContextType } from "../../../../../shared/index.js";
 import { AuthInput } from "./type.js";
+import authenticationMethod from "../../../lib/util/auth/index.js";
 
 @Resolver(User)
 export class AuthResolver {
   @Mutation(() => User)
-
-  // MIDDLEWARE -> If logged in, Protect
   async register(
     @Arg("input") { email, password }: AuthInput,
-    @Ctx() context: ContextType
+    @Ctx() { res }: ContextType
   ): Promise<User> {
     try {
       const userExists = await getUserByParam({ email });
@@ -31,7 +38,7 @@ export class AuthResolver {
       const newUser = await createUser({ email, password: hashedPassword });
 
       const { accessToken, refreshToken } = buildTokens(newUser);
-      setCookies(accessToken, refreshToken, context.res);
+      setCookies(accessToken, refreshToken, res);
 
       return newUser;
     } catch (error) {
@@ -40,11 +47,9 @@ export class AuthResolver {
   }
 
   @Mutation(() => User)
-
-  // MIDDLEWARE -> If logged in, Protect
   async login(
     @Arg("input") { email, password }: AuthInput,
-    @Ctx() context: ContextType
+    @Ctx() { res }: ContextType
   ): Promise<User> {
     const user = await getUserByParam({ email });
 
@@ -54,8 +59,16 @@ export class AuthResolver {
       throw Error("Wrong credentials!");
 
     const { accessToken, refreshToken } = buildTokens(user);
-    setCookies(accessToken, refreshToken, context.res);
+    setCookies(accessToken, refreshToken, res);
 
     return user;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(authenticationMethod)
+  async logout(@Ctx() { res }: ContextType): Promise<boolean> {
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    return true;
   }
 }
