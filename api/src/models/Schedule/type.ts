@@ -29,10 +29,10 @@ export class ScheduleSchemaGraph {
 @ObjectType()
 export class Schedule {
   @Field(() => ID)
-  id: string;
+  id?: string;
 
   @Field()
-  name: string;
+  name?: string;
 
   @Field(() => [ScheduleSchemaGraph])
   content: ScheduleSchema[];
@@ -47,7 +47,7 @@ class CourseTypeGraph {
   name: string;
 }
 
-@ArgsType()
+@InputType()
 export class ScheduleInput {
   @Field(() => String, { nullable: false })
   subject: string;
@@ -63,4 +63,7 @@ export class ScheduleInput {
 
   @Field(() => [CourseTypeGraph], { nullable: true })
   courses: CourseType[];
+
+  @Field(() => String, { nullable: true })
+  name?: string;
 }

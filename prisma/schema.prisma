@@ -14,13 +14,13 @@ model User {
   email  String @unique
   password String
   tokenVersion Int @default(1)
-  schedules Schedule[]
+  schedules Schedule[] 
 }
 
 model Schedule {
   id  String   @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  name String? 
   content String
-  author User? @relation(fields: [authorId], references: [id])
+  author User? @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String   @db.ObjectId
 }
