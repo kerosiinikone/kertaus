@@ -19,7 +19,7 @@ export const requestSchedule = async (input: PromptInput) => {
       messages: [{ role: "user", content: generatePrompt(input) }],
       temperature: 0.2,
     });
-    return response.data.choices[0].message.content;
+    return JSON.parse(response.data.choices[0].message.content);
   } catch (error) {
     throw error;
   }

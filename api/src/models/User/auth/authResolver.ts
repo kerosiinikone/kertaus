@@ -1,15 +1,12 @@
-import { Resolver, Mutation, Arg, Ctx, UseMiddleware } from "type-graphql";
-import { User } from "../type.js";
-import {
-  createUser,
-  getUserByParam,
-} from "../../../lib/database/userOperations.js";
-import { comparePasswords, hashPassword } from "../../../lib/util/crypt.js";
 import { validate } from "email-validator";
-import { buildTokens, setCookies } from "../../../lib/util/cookies.js";
+import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import type { ContextType } from "../../../../../shared/index.js";
+import { createUser, getUserByParam } from "../../../lib/database/userModel.js";
+import { authenticationMiddleWare } from "../../../lib/util/auth/index.js";
+import { buildTokens, setCookies } from "../../../lib/util/cookies.js";
+import { comparePasswords, hashPassword } from "../../../lib/util/crypt.js";
+import { User } from "../type.js";
 import { AuthInput } from "./type.js";
-import authenticationMethod from "../../../lib/util/auth/index.js";
 
 @Resolver(User)
 export class AuthResolver {
@@ -19,9 +16,9 @@ export class AuthResolver {
     @Ctx() { res }: ContextType
   ): Promise<User> {
     try {
-      const userExists = await getUserByParam({ email });
+      const user = await getUserByParam({ email });
 
-      if (userExists) throw Error("User already exists!");
+      if (user) throw Error("User already exists!");
 
       if (!validate(email)) throw Error("Bad input!");
 
@@ -57,7 +54,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseMiddleware(authenticationMethod)
+  @UseMiddleware(authenticationMiddleWare)
   logout(@Ctx() { res }: ContextType): boolean {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");

@@ -2,7 +2,7 @@ import { MiddlewareFn } from "type-graphql";
 import { verifyAccessToken } from "../cookies.ts";
 import { ContextType } from "../../../../../shared";
 import { Request } from "express";
-import { getScheduleById } from "../../database/scheduleOperations.ts";
+import { getScheduleById } from "../../database/scheduleModel.ts";
 
 export const authenticationMiddleWare: MiddlewareFn<ContextType> = async (
   { context },

@@ -1,21 +1,20 @@
-import dotenv from "dotenv";
-import "reflect-metadata";
-import { buildSchema } from "type-graphql";
+import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import express from "express";
-import { ApolloServer } from "@apollo/server";
-import http from "http";
+import pkg from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { startPrisma } from "./db.ts";
-import { UserResolver } from "./src/models/User/userResolver.ts";
-import pkg from "body-parser";
-import { AuthResolver } from "./src/models/User/auth/authResolver.ts";
+import dotenv from "dotenv";
+import express from "express";
+import http from "http";
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
 import { ContextType } from "../shared/index.ts";
+import { startPrisma } from "./db.ts";
 import { ScheduleResolver } from "./src/models/Schedule/resolver.ts";
+import { AuthResolver } from "./src/models/User/auth/authResolver.ts";
+import { UserResolver } from "./src/models/User/userResolver.ts";
 import { refreshRouter } from "./src/routes/refresh.ts";
-import authenticationMethod from "./src/lib/util/auth/index.ts";
 
 const { json } = pkg;
 dotenv.config();
@@ -56,7 +55,8 @@ const main = async () => {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: process.env.PORT }, resolve)
   );
-  console.log(`🚀 Server ready at ${process.env.SERVER_URL}`);
+  if (process.env.ENVIRONMENT === "DEVELOPMENT")
+    console.log(`🚀 Server ready at ${process.env.SERVER_URL}`);
 };
 
 await main();

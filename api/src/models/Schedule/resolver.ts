@@ -7,20 +7,14 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { Schedule, ScheduleInput } from "./type.ts";
+import { ContextType } from "../../../../shared/index.ts";
+import { ScheduleModel } from "../../lib/database/scheduleModel.ts";
 import { requestSchedule } from "../../lib/openai/completions.ts";
 import {
-  authenticationMiddleWare,
   authorizeMiddleware,
   getUserMiddleware,
 } from "../../lib/util/auth/index.ts";
-import { ContextType } from "../../../../shared/index.ts";
-import {
-  createSchedule,
-  deleteSchedule,
-  getAllSchedules,
-  getScheduleById,
-} from "../../lib/database/scheduleOperations.ts";
+import { Schedule, ScheduleInput } from "./type.ts";
 
 @Resolver(Schedule)
 export class ScheduleResolver {
@@ -46,29 +40,30 @@ export class ScheduleResolver {
       courses,
     });
 
+    const schedule = new ScheduleModel(content, name, res.locals.user ?? null);
+
     if (res.locals.user) {
-      const schedule = await createSchedule({
-        name: name ?? null,
-        authorId: res.locals.user,
-        content,
-      });
-      return schedule;
+      await schedule.save();
     }
-    return {
-      content: JSON.parse(content),
-      name: name ?? null,
-    };
+    return schedule;
   }
 
-  @UseMiddleware(getUserMiddleware, authenticationMiddleWare)
+  @UseMiddleware(getUserMiddleware, authorizeMiddleware)
   @Mutation(() => Schedule)
   async deleteSchedule(@Arg("sid") sid: string) {
-    return await deleteSchedule(sid);
+    return await ScheduleModel.deleteSchedule(sid);
   }
 
+  @UseMiddleware(getUserMiddleware, authorizeMiddleware)
+  @Mutation(() => Schedule)
+  async editSchedule(@Arg("sid") sid: string, @Arg("name") name: string) {
+    return await ScheduleModel.editSchedule(sid, { name });
+  }
+
+  @UseMiddleware(getUserMiddleware, authorizeMiddleware)
   @Query(() => Schedule)
   async getSchedule(@Arg("sid") sid: string) {
-    return await getScheduleById(sid);
+    return await ScheduleModel.getScheduleById(sid);
   }
 
   @Query(() => [Schedule])
@@ -77,7 +72,7 @@ export class ScheduleResolver {
     @Arg("cursor") cursor?: string,
     @Arg("uid") uid?: string
   ) {
-    return await getAllSchedules({
+    return await ScheduleModel.getAllSchedules({
       take,
       skip: cursor ? 1 : 0,
       cursor: { id: cursor ?? null },
