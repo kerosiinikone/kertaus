@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { getUserByParam } from "../lib/database/userModel.ts";
+import { getUserByParam } from "../lib/database/userOperations.ts";
 import {
   VerifiedRefreshToken,
   refreshTokens,

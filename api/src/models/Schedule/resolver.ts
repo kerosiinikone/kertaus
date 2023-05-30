@@ -7,14 +7,15 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { ContextType } from "../../../../shared/index.ts";
-import { ScheduleModel } from "../../lib/database/scheduleModel.ts";
+import type { ContextType } from "../../../../shared/index.ts";
+import { ScheduleModel } from "../../lib/database/scheduleOperations.ts";
 import { requestSchedule } from "../../lib/openai/completions.ts";
 import {
+  authenticationMiddleWare,
   authorizeMiddleware,
   getUserMiddleware,
 } from "../../lib/util/auth/index.ts";
-import { Schedule, ScheduleInput } from "./type.ts";
+import { Schedule, ScheduleInput, ScheduleQueryParams } from "./type.ts";
 
 @Resolver(Schedule)
 export class ScheduleResolver {
@@ -62,22 +63,25 @@ export class ScheduleResolver {
 
   @UseMiddleware(getUserMiddleware, authorizeMiddleware)
   @Query(() => Schedule)
-  async getSchedule(@Arg("sid") sid: string) {
+  async schedule(@Arg("sid") sid: string) {
     return await ScheduleModel.getScheduleById(sid);
   }
 
+  @UseMiddleware(authenticationMiddleWare)
   @Query(() => [Schedule])
-  async getSchedules(
-    @Arg("take") take: number,
-    @Arg("cursor") cursor?: string,
-    @Arg("uid") uid?: string
+  async schedules(
+    @Args() { take, cursor }: ScheduleQueryParams,
+    @Ctx() { res }: ContextType
   ) {
     return await ScheduleModel.getAllSchedules({
       take,
       skip: cursor ? 1 : 0,
-      cursor: { id: cursor ?? null },
+      cursor: cursor ? { id: cursor } : undefined,
+      orderBy: {
+        id: "asc",
+      },
       where: {
-        authorId: uid ?? null,
+        authorId: res.locals.user,
       },
     });
   }

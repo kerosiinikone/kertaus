@@ -3,7 +3,7 @@ import { Schedule } from "../Schedule/type.ts";
 
 @ObjectType()
 export class User {
-  @Field((type) => ID)
+  @Field(() => ID)
   id: string;
 
   @Field()

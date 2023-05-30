@@ -2,7 +2,7 @@ import { MiddlewareFn } from "type-graphql";
 import { verifyAccessToken } from "../cookies.ts";
 import { ContextType } from "../../../../../shared";
 import { Request } from "express";
-import { getScheduleById } from "../../database/scheduleModel.ts";
+import { ScheduleModel } from "../../database/scheduleOperations.ts";
 
 export const authenticationMiddleWare: MiddlewareFn<ContextType> = async (
   { context },
@@ -25,7 +25,7 @@ export const authorizeMiddleware: MiddlewareFn<ContextType> = async (
   { context, args },
   next
 ) => {
-  const schedule = await getScheduleById(args.sid);
+  const schedule = await ScheduleModel.getScheduleById(args.sid);
   if (!schedule || schedule.authorId !== context.res.locals.user)
     throw Error("Not authorized");
   return next();

@@ -1,7 +1,10 @@
 import { validate } from "email-validator";
 import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import type { ContextType } from "../../../../../shared/index.js";
-import { createUser, getUserByParam } from "../../../lib/database/userModel.js";
+import {
+  createUser,
+  getUserByParam,
+} from "../../../lib/database/userOperations.js";
 import { authenticationMiddleWare } from "../../../lib/util/auth/index.js";
 import { buildTokens, setCookies } from "../../../lib/util/cookies.js";
 import { comparePasswords, hashPassword } from "../../../lib/util/crypt.js";

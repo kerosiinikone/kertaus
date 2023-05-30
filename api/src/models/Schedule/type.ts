@@ -47,7 +47,7 @@ class CourseTypeGraph {
   name: string;
 }
 
-@InputType()
+@ArgsType()
 export class ScheduleInput {
   @Field(() => String, { nullable: false })
   subject: string;
@@ -66,4 +66,13 @@ export class ScheduleInput {
 
   @Field(() => String, { nullable: true })
   name?: string;
+}
+
+@ArgsType()
+export class ScheduleQueryParams {
+  @Field(() => Number, { nullable: false })
+  take: number;
+
+  @Field(() => String, { nullable: true })
+  cursor?: string;
 }
