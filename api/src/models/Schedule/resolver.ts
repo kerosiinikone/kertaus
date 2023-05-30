@@ -7,7 +7,7 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import type { ContextType } from "../../../../shared/index.ts";
+import type { ContextType, ScheduleSchema } from "../../../../shared/index.ts";
 import { ScheduleModel } from "../../lib/database/scheduleOperations.ts";
 import { requestSchedule } from "../../lib/openai/completions.ts";
 import {
@@ -33,7 +33,7 @@ export class ScheduleResolver {
     }: ScheduleInput,
     @Ctx() { res }: ContextType
   ) {
-    const content = await requestSchedule({
+    const content: ScheduleSchema = await requestSchedule({
       subject,
       subjectType,
       intensity,
