@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ApolloWrapper } from "../../lib/apollo-wrapper";
+import Header from "@/components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,8 +16,15 @@ export default function RootLayout({
 }) {
   return (
     <html className={inter.className}>
-      <body>
-        <ApolloWrapper>{children}</ApolloWrapper>
+      <body className="flex justify-center bg-gradient-to-r from-white to-neutral-100">
+        <ApolloWrapper>
+          <div className="container flex flex-col max-w-3xl">
+            <Header />
+            <div className="container flex justify-center md:my-18 my-10">
+              {children}
+            </div>
+          </div>
+        </ApolloWrapper>
       </body>
     </html>
   );
