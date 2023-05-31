@@ -76,7 +76,7 @@ const AIWrapper: React.FC<AIProps> = ({ subjectList, periods, submit }) => {
                   key={p}
                   onClick={() => setPeriod(p)}
                   className={`text-center select-none flex justify-center items-center ${
-                    period && period === p
+                    period === p
                       ? "border-2 border-slate-300 bg-slate-400 hover:border-slate-500"
                       : "bg-slate-500 border-0"
                   } text-white shadow-md min-w-[50px] p-2 rounded-md hover:bg-slate-100 hover:text-slate-500 transition`}
