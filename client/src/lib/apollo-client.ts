@@ -10,7 +10,7 @@ export const { getClient } = registerApolloClient(() => {
     },
     link: new HttpLink({
       credentials: "include",
-      uri: `${process.env.SERVER_URL}/graphql`,
+      uri: "http://localhost:4000/graphql",
     }),
   });
 });

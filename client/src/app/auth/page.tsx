@@ -2,14 +2,85 @@
 
 import LoginForm from "@/components/LoginForm";
 import RegisterForm from "@/components/RegisterForm";
-import { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+export interface AuthInput {
+  password: string;
+  email: string;
+  type: "LOGIN" | "REGISTER";
+}
+
+export interface RegisterResponse {
+  register: {
+    id?: string;
+    email?: string;
+  };
+}
+
+export interface LoginResponse {
+  login: {
+    id?: string;
+    email?: string;
+  };
+}
+
+export const loginQuery = gql`
+  mutation ($input: AuthInput!) {
+    login(input: $input) {
+      id
+      email
+    }
+  }
+`;
+
+export const registerQuery = gql`
+  mutation ($input: AuthInput!) {
+    register(input: $input) {
+      id
+      email
+    }
+  }
+`;
 
 export default function AuthPage() {
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [login, { data: LData }] = useMutation<LoginResponse>(loginQuery);
+  const [register, { data: RData }] =
+    useMutation<RegisterResponse>(registerQuery);
+
+  const authFn = async ({ password, email, type }: AuthInput) => {
+    const input = { password, email };
+    switch (type) {
+      case "LOGIN":
+        login({ variables: { input } });
+        break;
+      case "REGISTER":
+        register({ variables: { input } });
+    }
+  };
+
+  useEffect(() => {
+    // CONTEXT
+    if (LData?.login) router.push("/");
+  }, [LData]);
+  useEffect(() => {
+    // CONTEXT
+    if (RData?.register) router.push("/");
+  }, [RData]);
+
+  // ERROR HANDLING, React.createPortal
+
   return (
     <div className="flex md:flex-col flex-row items-center">
       <div className="flex flex-col space-y-7 justify-center items-center bg-white min-w-content rounded-xl md:p-20 p-7 shadow-md">
-        {isLogin ? <LoginForm /> : <RegisterForm />}
+        {isLogin ? (
+          <LoginForm authFn={authFn} />
+        ) : (
+          <RegisterForm authFn={authFn} />
+        )}
         <div className="min-w-[100px] border-2 rounded-md"></div>
         <div>
           <button

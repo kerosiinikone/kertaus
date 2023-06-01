@@ -1,12 +1,21 @@
 "use client";
 
-import { SyntheticEvent, useState } from "react";
+import { AuthInput } from "@/app/auth/page";
+import { useState } from "react";
 
-const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  authFn: ({ password, email, type }: AuthInput) => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ authFn }) => {
   const [sInput, setSInput] = useState<string>("");
   const [pInput, setPInput] = useState<string>("");
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    if (sInput.trim().length !== 0 && pInput.trim().length !== 0) {
+      authFn({ email: sInput, password: pInput, type: "LOGIN" });
+      setPInput("");
+      setSInput("");
+    }
   };
 
   return (
@@ -24,6 +33,7 @@ const LoginForm: React.FC = () => {
         <input
           value={pInput}
           onChange={(e) => setPInput(e.target.value)}
+          type="password"
           className="outline-none"
           placeholder="Salasana"
         />

@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { ApolloWrapper } from "../../lib/apollo-wrapper";
 import Header from "@/components/Header";
+import { ApolloWrapper } from "@/lib/apollo-wrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 

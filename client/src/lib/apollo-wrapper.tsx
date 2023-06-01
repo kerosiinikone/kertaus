@@ -15,7 +15,7 @@ import {
 function makeClient() {
   const httpLink = new HttpLink({
     credentials: "include",
-    uri: `${process.env.SERVER_URL}/graphql`,
+    uri: "http://localhost:4000/graphql",
   });
 
   return new ApolloClient({

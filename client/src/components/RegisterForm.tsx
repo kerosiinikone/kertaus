@@ -1,10 +1,19 @@
-import { SyntheticEvent, useState } from "react";
+import { AuthInput } from "@/app/auth/page";
+import { useState } from "react";
 
-const RegisterForm: React.FC = () => {
+interface RegisterFormProps {
+  authFn: ({ password, email, type }: AuthInput) => void;
+}
+
+const RegisterForm: React.FC<RegisterFormProps> = ({ authFn }) => {
   const [sInput, setSInput] = useState<string>("");
   const [pInput, setPInput] = useState<string>("");
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    if (sInput.trim().length !== 0 && pInput.trim().length !== 0) {
+      authFn({ email: sInput, password: pInput, type: "REGISTER" });
+      setPInput("");
+      setSInput("");
+    }
   };
 
   return (
@@ -22,6 +31,7 @@ const RegisterForm: React.FC = () => {
         <input
           value={pInput}
           onChange={(e) => setPInput(e.target.value)}
+          type="password"
           className="outline-none"
           placeholder="Salasana"
         />
