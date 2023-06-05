@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
 
+export interface User {
+  email?: string;
+  id?: string;
+}
+
 export interface ScheduleSchema {
   aiheet: string[];
   teoriat: string[];

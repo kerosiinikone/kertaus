@@ -2,6 +2,7 @@
 
 import LoginForm from "@/components/LoginForm";
 import RegisterForm from "@/components/RegisterForm";
+import { useUserContext } from "@/context/UserContext";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -45,10 +46,12 @@ export const registerQuery = gql`
 `;
 
 export default function AuthPage() {
+  const { setUser } = useUserContext();
   const router = useRouter();
   const [isLogin, setIsLogin] = useState<boolean>(true);
-  const [login, { data: LData }] = useMutation<LoginResponse>(loginQuery);
-  const [register, { data: RData }] =
+  const [login, { data: LData, error: LError }] =
+    useMutation<LoginResponse>(loginQuery);
+  const [register, { data: RData, error: RError }] =
     useMutation<RegisterResponse>(registerQuery);
 
   const authFn = async ({ password, email, type }: AuthInput) => {
@@ -59,16 +62,21 @@ export default function AuthPage() {
         break;
       case "REGISTER":
         register({ variables: { input } });
+        break;
     }
   };
 
   useEffect(() => {
-    // CONTEXT
-    if (LData?.login) router.push("/");
+    if (LData?.login && !LError) {
+      setUser({ email: LData.login.email, id: LData.login.id });
+      router.push("/");
+    }
   }, [LData]);
   useEffect(() => {
-    // CONTEXT
-    if (RData?.register) router.push("/");
+    if (RData?.register && !RError) {
+      setUser({ email: RData.register.email, id: RData.register.id });
+      router.push("/");
+    }
   }, [RData]);
 
   // ERROR HANDLING, React.createPortal

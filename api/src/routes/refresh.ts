@@ -11,12 +11,9 @@ export const refreshRouter = express.Router();
 
 refreshRouter.get("/", async (req: Request, res: Response) => {
   try {
-    const refreshToken: string = req.cookies["refreshToken"];
+    const refreshToken = req.cookies["refreshToken"];
 
-    let vToken: VerifiedRefreshToken;
-
-    if (refreshToken) vToken = verifyRefreshToken(refreshToken);
-
+    let vToken: VerifiedRefreshToken = verifyRefreshToken(refreshToken);
     const userFound = await getUserByParam({ id: vToken.id });
 
     if (!userFound) throw Error("No auth");

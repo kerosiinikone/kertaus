@@ -53,9 +53,7 @@ export const verifyRefreshToken = (token: string) => {
       process.env.SECRET_TOKEN
     ) as VerifiedRefreshToken;
     return payload;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 export const verifyAccessToken = (token: string) => {
@@ -65,9 +63,7 @@ export const verifyAccessToken = (token: string) => {
       process.env.SECRET_TOKEN
     ) as VerifiedAccessToken;
     return payload;
-  } catch (error) {
-    throw error;
-  }
+  } catch (error) {}
 };
 
 export const setCookies = (access: string, refresh: string, res: Response) => {

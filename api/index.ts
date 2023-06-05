@@ -50,6 +50,14 @@ const main = async () => {
       }),
     })
   );
+
+  app.use(
+    "/refresh",
+    cors<cors.CorsRequest>({
+      credentials: true,
+      origin: [process.env.CLIENT_URL, "http://localhost:3000/me"],
+    })
+  );
   app.use("/refresh", refreshRouter);
 
   await new Promise<void>((resolve) =>
