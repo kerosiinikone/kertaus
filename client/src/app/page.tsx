@@ -1,7 +1,16 @@
 "use client";
 
 import AIWrapper from "@/components/AIWrapper";
-import { Periods } from "../../../shared/index";
+import {
+  CodeType,
+  Intensities,
+  Periods,
+  PromptInput,
+} from "../../../shared/index";
+import { gql, useMutation } from "@apollo/client";
+import { getValidatedInput } from "@/lib/util/validator";
+import { createPortal } from "react-dom";
+import ModalLoader from "@/components/ModalLoader";
 
 export interface Subject {
   name: string;
@@ -24,16 +33,64 @@ const REVISION_PERIOD: Periods[] = [
   Periods.OTHER,
 ];
 
+const scheduleRequestMutation = gql`
+  mutation (
+    $subject: String!
+    $timePeriod: String!
+    $intensity: Intensities!
+    $subjectType: CodeType!
+    $courses: [String!]
+  ) {
+    createSchedule(
+      subject: $subject
+      timePeriod: $timePeriod
+      intensity: $intensity
+      subjectType: $subjectType
+      courses: $courses
+    ) {
+      content {
+        aiheet
+        teoriat
+        tehtavananto
+        kesto
+      }
+    }
+  }
+`;
+
 export default function AILandingPage() {
-  const MOCKUP_SUBMIT = (input: any) => {};
+  const [requestSchedule, { loading: loadingSchedule }] = useMutation(
+    scheduleRequestMutation,
+    {
+      fetchPolicy: "no-cache",
+    }
+  );
+
+  const MOCKUP_SUBMIT = (input: {
+    subject: string;
+    intensity: Intensities;
+    timePeriod: string;
+  }) => {
+    const traversionResult = getValidatedInput(input);
+    const promptInput: PromptInput = {
+      ...input,
+      courses: traversionResult.result.courses,
+      subjectType: traversionResult.result.subjectType as CodeType,
+    };
+
+    requestSchedule({ variables: { ...promptInput } });
+  };
 
   return (
-    <div className="flex md:flex-col flex-row items-center">
-      <AIWrapper
-        submit={MOCKUP_SUBMIT}
-        periods={REVISION_PERIOD}
-        subjectList={MOCKUP_LIST}
-      />
-    </div>
+    <>
+      <div className="flex md:flex-col flex-row items-center">
+        <AIWrapper
+          submit={MOCKUP_SUBMIT}
+          periods={REVISION_PERIOD}
+          subjectList={MOCKUP_LIST}
+        />
+      </div>
+      {loadingSchedule && createPortal(<ModalLoader />, document.body)}
+    </>
   );
 }

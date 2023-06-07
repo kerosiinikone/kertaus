@@ -8,7 +8,7 @@ export interface User {
 export interface ScheduleSchema {
   aiheet: string[];
   teoriat: string[];
-  tehtavananto: string;
+  tehtavananto: number;
   kesto: number;
 }
 
@@ -18,8 +18,8 @@ export interface ContextType {
 }
 
 export enum Periods {
-  "WEEK" = "1 viikko",
-  "TWOWEEKS" = "2 viikkoa",
+  "WEEK" = "7 päivää",
+  "TWOWEEKS" = "14 päivää",
   "FIVE" = "5 päivää",
   "OTHER" = "Muu",
 }
@@ -31,8 +31,8 @@ export enum Intensities {
 }
 
 export enum CodeType {
-  COURSE,
-  SUBJECT,
+  COURSE = "COURSE",
+  SUBJECT = "SUBJECT",
 }
 
 export interface Subject {
@@ -40,13 +40,9 @@ export interface Subject {
   shorthand: string;
 }
 
-export interface CourseType {
-  name: string;
-}
-
 export interface PromptInput {
   subject: string;
-  courses?: CourseType[];
+  courses?: string[];
   timePeriod: string;
   intensity: Intensities;
   subjectType: CodeType;

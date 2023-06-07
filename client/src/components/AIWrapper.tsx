@@ -2,7 +2,7 @@
 
 import { Subject } from "../app/page";
 import { useState } from "react";
-import { Intensities, Periods } from "../../../shared/index";
+import { Periods } from "../../../shared/index";
 
 interface AIProps {
   subjectList: Subject[];
@@ -13,9 +13,16 @@ interface AIProps {
 const AIWrapper: React.FC<AIProps> = ({ subjectList, periods, submit }) => {
   const [subject, setSubject] = useState<Subject | null>(null);
   const [period, setPeriod] = useState<Periods | null>(null);
-  const [intensity, setIntensity] = useState<Intensities | null>(null);
-
+  const [intensity, setIntensity] = useState<string | null>(null);
   const [sInput, setSInput] = useState<string>("");
+
+  const handleSubmit = () => {
+    submit({
+      subject: subject!.shorthand === "Muu" ? sInput : subject!.name,
+      timePeriod: period as string,
+      intensity,
+    });
+  };
 
   return (
     <div className="flex flex-col justify-center items-center bg-gradient-to-l from-neutral-100 to-neutral-150 min-w-content md:mx-10 mx-0 rounded-2xl shadow-lg md:p-2 p-0">
@@ -96,9 +103,9 @@ const AIWrapper: React.FC<AIProps> = ({ subjectList, periods, submit }) => {
           </div>
           <div className="flex flex-row md:space-x-4 space-x-1 justify-center items-center">
             <div
-              onClick={() => setIntensity(Intensities.EASY)}
+              onClick={() => setIntensity("EASY")}
               className={`select-none text-white ${
-                intensity === Intensities.EASY
+                intensity === "EASY"
                   ? "border-2 border-emerald-600 bg-emerald-400 hover:border-emerald-500"
                   : "bg-emerald-400 border-0"
               } shadow-md  p-2 rounded-md hover:bg-emerald-100 hover:text-emerald-400 transition`}
@@ -106,9 +113,9 @@ const AIWrapper: React.FC<AIProps> = ({ subjectList, periods, submit }) => {
               <h2>Helppo</h2>
             </div>
             <div
-              onClick={() => setIntensity(Intensities.INTERMEDIATE)}
+              onClick={() => setIntensity("INTERMEDIATE")}
               className={`select-none text-white ${
-                intensity === Intensities.INTERMEDIATE
+                intensity === "INTERMEDIATE"
                   ? "border-2 border-amber-600 bg-amber-400 hover:border-amber-500"
                   : "bg-amber-400 border-0"
               } shadow-md  p-2 rounded-md hover:bg-amber-100 hover:text-amber-400 transition`}
@@ -116,9 +123,9 @@ const AIWrapper: React.FC<AIProps> = ({ subjectList, periods, submit }) => {
               <h2>Keskitaso</h2>
             </div>
             <div
-              onClick={() => setIntensity(Intensities.HARD)}
+              onClick={() => setIntensity("HARD")}
               className={`select-none text-white ${
-                intensity === Intensities.HARD
+                intensity === "HARD"
                   ? "border-2 border-red-600 bg-red-400 hover:border-red-600"
                   : "bg-red-400 border-0"
               } shadow-md  p-2 rounded-md hover:bg-red-100 hover:text-red-400 transition`}
@@ -132,14 +139,7 @@ const AIWrapper: React.FC<AIProps> = ({ subjectList, periods, submit }) => {
             <div className="min-w-[300px] border-2 rounded-md"></div>
             <div className="flex flex-col justify-center items-center">
               <button
-                onClick={() =>
-                  submit({
-                    subject:
-                      subject.shorthand === "Muu" ? sInput : subject.name,
-                    timePeriod: period as string,
-                    intensity,
-                  })
-                }
+                onClick={handleSubmit}
                 disabled={
                   subject?.shorthand === "Muu" && sInput.trim() === ""
                     ? true

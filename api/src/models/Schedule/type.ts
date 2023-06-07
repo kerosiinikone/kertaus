@@ -1,6 +1,6 @@
-import { Field, ObjectType, ID, ArgsType, InputType } from "type-graphql";
+import { Field, ObjectType, ID, ArgsType } from "type-graphql";
 import { User } from "../User/type.ts";
-import { CodeType, CourseType, Intensities } from "../../../../shared/index.ts";
+import { CodeType, Intensities } from "../../../../shared/index.ts";
 import type { ScheduleSchema } from "../../../../shared/index.ts";
 import { registerEnumType } from "type-graphql";
 
@@ -16,11 +16,11 @@ export class ScheduleSchemaGraph {
   @Field(() => [String])
   aiheet: string[];
 
-  @Field(() => [String])
-  teoriat: string[];
+  @Field(() => String)
+  teoriat: string;
 
   @Field()
-  tehtavananto: string;
+  tehtavananto: number;
 
   @Field()
   kesto: number;
@@ -41,12 +41,6 @@ export class Schedule {
   author?: Promise<User>;
 }
 
-@InputType()
-class CourseTypeGraph {
-  @Field()
-  name: string;
-}
-
 @ArgsType()
 export class ScheduleInput {
   @Field(() => String, { nullable: false })
@@ -61,8 +55,8 @@ export class ScheduleInput {
   @Field(() => CodeType, { nullable: false })
   subjectType: CodeType;
 
-  @Field(() => [CourseTypeGraph], { nullable: true })
-  courses: CourseType[];
+  @Field(() => [String], { nullable: true })
+  courses: string[];
 
   @Field(() => String, { nullable: true })
   name?: string;
