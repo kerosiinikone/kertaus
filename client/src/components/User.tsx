@@ -8,8 +8,6 @@ interface UserProps {
   logout: () => void;
 }
 
-// MIDDLEWARE - Must be logged in
-
 const User: React.FC<UserProps> = ({ logout }) => {
   const { user } = useUserContext();
   return (

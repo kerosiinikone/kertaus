@@ -5,6 +5,14 @@ export interface User {
   id?: string;
 }
 
+export interface ScheduleModelSchema {
+  id?: string;
+  content: ScheduleSchema;
+  authorId?: string;
+  author?: User;
+  name?: string;
+}
+
 export interface ScheduleSchema {
   aiheet: string[];
   teoriat: string[];

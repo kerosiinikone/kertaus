@@ -1,6 +1,9 @@
 import { Prisma } from "@prisma/client";
 import { schedule } from "../../../db.ts";
-import { ScheduleSchema } from "../../../../shared/index.ts";
+import {
+  ScheduleModelSchema,
+  ScheduleSchema,
+} from "../../../../shared/index.ts";
 
 export interface FetchOptions {
   select?: Prisma.ScheduleSelect;
@@ -12,11 +15,11 @@ export interface FetchOptions {
   skip?: number;
 }
 
-export class ScheduleModel {
+export class ScheduleModel implements ScheduleModelSchema {
   constructor(
-    private content: ScheduleSchema,
-    private name?: string,
-    private authorId?: string
+    public content: ScheduleSchema,
+    public name?: string,
+    public authorId?: string
   ) {}
   async save() {
     return await schedule.create({

@@ -31,14 +31,17 @@ export class Schedule {
   @Field(() => ID)
   id?: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   name?: string;
 
   @Field(() => [ScheduleSchemaGraph])
   content: ScheduleSchema[];
 
-  @Field(() => User)
+  @Field(() => User, { nullable: true })
   author?: Promise<User>;
+
+  @Field(() => String, { nullable: true })
+  authorId?: string;
 }
 
 @ArgsType()

@@ -29,6 +29,9 @@ export const getAllUsers = async (fetchOptions: FetchOptions) => {
 export const getUserByParam = async (param: QueryParam) => {
   return await user.findFirst({
     where: param,
+    include: {
+      schedules: true,
+    },
   });
 };
 
