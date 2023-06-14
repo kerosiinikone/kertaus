@@ -11,6 +11,7 @@ import { gql, useMutation } from "@apollo/client";
 import { getValidatedInput } from "@/lib/util/validator";
 import { createPortal } from "react-dom";
 import ModalLoader from "@/components/ModalLoader";
+import ScheduleWrapper from "@/components/ScheduleWrapper";
 
 export interface Subject {
   name: string;
@@ -32,6 +33,17 @@ const REVISION_PERIOD: Periods[] = [
   Periods.TWOWEEKS,
   Periods.OTHER,
 ];
+
+export interface ScheduleMutation {
+  createSchedule: {
+    content: {
+      aiheet: string[];
+      teoriat: string;
+      tehtavananto: number;
+      kesto: number;
+    }[];
+  };
+}
 
 const scheduleRequestMutation = gql`
   mutation (
@@ -59,12 +71,10 @@ const scheduleRequestMutation = gql`
 `;
 
 export default function AILandingPage() {
-  const [requestSchedule, { loading: loadingSchedule }] = useMutation(
-    scheduleRequestMutation,
-    {
+  const [requestSchedule, { loading: loadingSchedule, data: scheduleData }] =
+    useMutation<ScheduleMutation>(scheduleRequestMutation, {
       fetchPolicy: "no-cache",
-    }
-  );
+    });
 
   const MOCKUP_SUBMIT = (input: {
     subject: string;
@@ -84,11 +94,15 @@ export default function AILandingPage() {
   return (
     <>
       <div className="flex md:flex-col flex-row items-center">
-        <AIWrapper
-          submit={MOCKUP_SUBMIT}
-          periods={REVISION_PERIOD}
-          subjectList={MOCKUP_LIST}
-        />
+        {scheduleData?.createSchedule?.content ? (
+          <ScheduleWrapper content={scheduleData?.createSchedule?.content} />
+        ) : (
+          <AIWrapper
+            submit={MOCKUP_SUBMIT}
+            periods={REVISION_PERIOD}
+            subjectList={MOCKUP_LIST}
+          />
+        )}
       </div>
       {loadingSchedule && createPortal(<ModalLoader />, document.body)}
     </>

@@ -11,12 +11,17 @@ export const requestSchedule = async (input: PromptInput) => {
     { role: "user", content: generatePrompt(input) },
   ];
 
+  console.log(initialPrompt);
+
   try {
     const response = await openai.createChatCompletion({
       model: DEFAULT_MODEL,
       messages: initialPrompt,
-      temperature: 0.5,
+      temperature: 0.2,
       max_tokens: 2048,
+      top_p: 1,
+      presence_penalty: 0,
+      frequency_penalty: 0,
     });
     return JSON.parse(response.data.choices[0].message.content);
   } catch (error) {

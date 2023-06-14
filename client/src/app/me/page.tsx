@@ -7,6 +7,9 @@ import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ScheduleModelSchema } from "../../../../shared";
+import useRefresh from "@/hooks/useRefresh";
+
+const DEFAULT_SCHEDULE_AMOUNT = 5;
 
 const MeQuery = gql`
   query {
@@ -45,12 +48,16 @@ export interface UserQueryResponse {
 }
 
 export default function UserPage() {
-  const { data, refetch } = useQuery<UserQueryResponse>(MeQuery);
+  const { data, refetch } = useQuery<UserQueryResponse>(MeQuery, {
+    fetchPolicy: "no-cache",
+  });
   const [cursorItem, setCursorItem] = useState<ScheduleModelSchema | null>(
     null
   );
   const [fetchSchedules, { data: schedulesData, fetchMore: __ }] =
-    useLazyQuery<ScheduleQueryResponse>(UserSchedulesQuery);
+    useLazyQuery<ScheduleQueryResponse>(UserSchedulesQuery, {
+      fetchPolicy: "network-only",
+    });
   const [logoutMutation] = useMutation(logoutQuery);
   const { setUser, user } = useUserContext();
   const router = useRouter();
@@ -61,29 +68,19 @@ export default function UserPage() {
     router.push("/auth");
   };
 
+  const [refresh] = useRefresh({
+    refetch,
+    logout,
+    router,
+  });
+
   useEffect(() => {
     if (!data) {
-      try {
-        fetch("http://localhost:4000/refresh", { credentials: "include" })
-          .then(() => {
-            refetch()
-              .then(({ data }) => {
-                if (!data) router.push("/auth");
-              })
-              .catch(() => {
-                logout();
-              });
-          })
-          .catch(() => {
-            router.push("/auth");
-          });
-      } catch (error) {
-        throw error;
-      }
+      refresh();
     } else {
       fetchSchedules({
         variables: {
-          take: 10,
+          take: DEFAULT_SCHEDULE_AMOUNT,
           cursor: cursorItem?.id ?? null,
         },
       });
@@ -100,8 +97,8 @@ export default function UserPage() {
   }, [schedulesData]);
 
   return (
-    <div className="flex md:flex-col space-y-4 flex-row items-center">
-      <div className="bg-white min-w-content rounded-xl md:p-20 p-7 shadow-md">
+    <div className="flex flex-col space-y-4 items-center">
+      <div className="bg-white min-w-content rounded-xl md:p-20 p-4 shadow-md">
         {user ? <User logout={logout} /> : <h1>Loading</h1>}
       </div>
       {user && schedulesData?.schedules && (
