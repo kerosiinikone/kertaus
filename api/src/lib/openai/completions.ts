@@ -17,7 +17,7 @@ export const requestSchedule = async (input: PromptInput) => {
     const response = await openai.createChatCompletion({
       model: DEFAULT_MODEL,
       messages: initialPrompt,
-      temperature: 0.2,
+      temperature: 0.7,
       max_tokens: 2048,
       top_p: 1,
       presence_penalty: 0,

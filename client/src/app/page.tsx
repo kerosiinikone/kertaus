@@ -31,11 +31,11 @@ const REVISION_PERIOD: Periods[] = [
   Periods.FIVE,
   Periods.WEEK,
   Periods.TWOWEEKS,
-  Periods.OTHER,
 ];
 
 export interface ScheduleMutation {
   createSchedule: {
+    name: string;
     content: {
       aiheet: string[];
       teoriat: string;
@@ -60,6 +60,7 @@ const scheduleRequestMutation = gql`
       subjectType: $subjectType
       courses: $courses
     ) {
+      name
       content {
         aiheet
         teoriat
@@ -86,6 +87,7 @@ export default function AILandingPage() {
       ...input,
       courses: traversionResult.result.courses,
       subjectType: traversionResult.result.subjectType as CodeType,
+      subject: traversionResult.result.subject ?? input.subject,
     };
 
     requestSchedule({ variables: { ...promptInput } });
@@ -95,7 +97,10 @@ export default function AILandingPage() {
     <>
       <div className="flex md:flex-col flex-row items-center">
         {scheduleData?.createSchedule?.content ? (
-          <ScheduleWrapper content={scheduleData?.createSchedule?.content} />
+          <ScheduleWrapper
+            content={scheduleData?.createSchedule.content}
+            name={scheduleData?.createSchedule.name}
+          />
         ) : (
           <AIWrapper
             submit={MOCKUP_SUBMIT}

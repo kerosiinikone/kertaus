@@ -29,7 +29,6 @@ export enum Periods {
   "WEEK" = "7 päivää",
   "TWOWEEKS" = "14 päivää",
   "FIVE" = "5 päivää",
-  "OTHER" = "Muu",
 }
 
 export enum Intensities {

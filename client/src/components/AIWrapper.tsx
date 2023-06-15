@@ -63,7 +63,7 @@ const AIWrapper: React.FC<AIProps> = ({ subjectList, periods, submit }) => {
                   value={sInput}
                   onChange={(e) => setSInput(e.target.value)}
                   className="outline-none"
-                  placeholder="Pitkä matematiikka, ÄI06, yms"
+                  placeholder="Pitkä matematiikka, ÄI05, yms"
                 />
               </div>
             )}

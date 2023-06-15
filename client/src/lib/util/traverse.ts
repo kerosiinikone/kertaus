@@ -42,7 +42,24 @@ export const traverseCourses = (code: string) => {
   return result;
 };
 
+const getCourseNameByCode = (code: string): string => {
+  let courses: { koodi: string; nimi: string }[] = [];
+  for (let i of lops2019) {
+    const codes: { koodi: string; nimi: string }[] = i.kurssit;
+    courses = courses.concat(codes);
+  }
+  let foundName = "";
+  for (let i of courses) {
+    if (i.koodi.toLowerCase() === code.toLowerCase()) {
+      foundName = i.nimi;
+      break;
+    }
+  }
+  return foundName;
+};
+
 export type ContainsType = {
+  subject?: string;
   contains: boolean;
   subjectType?: CodeType;
   courses?: string[];
@@ -55,7 +72,14 @@ export const contains = (code: string): ContainsType => {
       subjectType: CodeType.SUBJECT,
       courses: traverseCourses(code),
     };
-  if (getCourseNames().includes(code) || getCourseCodes().includes(code))
+  if (getCourseCodes().includes(code))
+    return {
+      subject: getCourseNameByCode(code),
+      contains: true,
+      subjectType: CodeType.COURSE,
+      courses: [],
+    };
+  if (getCourseNames().includes(code))
     return { contains: true, subjectType: CodeType.COURSE, courses: [] };
   return { contains: false };
 };

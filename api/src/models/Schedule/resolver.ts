@@ -41,7 +41,11 @@ export class ScheduleResolver {
       courses,
     });
 
-    const schedule = new ScheduleModel(content, name, res.locals.user ?? null);
+    const schedule = new ScheduleModel(
+      content,
+      name ?? subject,
+      res.locals.user ?? null
+    );
 
     if (res.locals.user) {
       await schedule.save();
