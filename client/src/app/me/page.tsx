@@ -47,8 +47,6 @@ export interface UserQueryResponse {
   };
 }
 
-type PaginationDirection = "FORWARD" | "BACKWARD";
-
 export default function UserPage() {
   const { data, refetch } = useQuery<UserQueryResponse>(MeQuery, {
     fetchPolicy: "no-cache",

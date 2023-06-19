@@ -2,7 +2,6 @@
 
 import ScheduleWrapper from "@/components/ScheduleWrapper";
 import { gql, useQuery } from "@apollo/client";
-import { Suspense } from "react";
 import { ScheduleSchema } from "../../../../../shared";
 
 interface SingleScheduleResponse {
@@ -37,8 +36,8 @@ export default function SchedulePage({ params }: { params: { sid: string } }) {
       <div className="flex md:flex-col flex-row items-center">
         {data?.schedule ? (
           <ScheduleWrapper
-            content={data?.schedule?.content}
-            name={data?.schedule?.name}
+            content={data.schedule.content}
+            name={data.schedule.name}
           />
         ) : (
           <h1>Loading</h1>

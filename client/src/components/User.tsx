@@ -26,11 +26,6 @@ const User: React.FC<UserProps> = ({ logout }) => {
         <h1 className="md:text-xl text-md text-slate-500">{user?.email}</h1>
       </div>
       <div className="col-span-2 ">
-        <button className="p-2 rounded-lg bg-slate-400 text-white hover:bg-slate-500 transition">
-          Clear cache
-        </button>
-      </div>
-      <div className="col-span-2 ">
         <button
           onClick={logout}
           className="p-2 rounded-lg bg-red-400 text-white hover:bg-red-500 transition"
