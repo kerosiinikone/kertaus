@@ -27,7 +27,7 @@ export const authorizeMiddleware: MiddlewareFn<ContextType> = async (
 ) => {
   const schedule = await ScheduleModel.getScheduleById(args.sid);
   if (!schedule || schedule.authorId !== context.res.locals.user)
-    throw Error("Not authorized");
+    throw new Error("Not authorized");
   return next();
 };
 

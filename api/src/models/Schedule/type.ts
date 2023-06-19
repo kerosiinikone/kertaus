@@ -70,6 +70,6 @@ export class ScheduleQueryParams {
   @Field(() => Number, { nullable: false })
   take: number;
 
-  @Field(() => String, { nullable: true })
-  cursor?: string;
+  @Field(() => Number, { nullable: false })
+  offset: number;
 }

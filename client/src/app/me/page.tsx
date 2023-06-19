@@ -21,8 +21,8 @@ const MeQuery = gql`
 `;
 
 const UserSchedulesQuery = gql`
-  query ($take: Float!, $cursor: String) {
-    schedules(take: $take, cursor: $cursor) {
+  query ($take: Float!, $offset: Float!) {
+    schedules(take: $take, offset: $offset) {
       id
       name
     }
@@ -47,17 +47,17 @@ export interface UserQueryResponse {
   };
 }
 
+type PaginationDirection = "FORWARD" | "BACKWARD";
+
 export default function UserPage() {
   const { data, refetch } = useQuery<UserQueryResponse>(MeQuery, {
     fetchPolicy: "no-cache",
   });
-  const [cursorItem, setCursorItem] = useState<ScheduleModelSchema | null>(
-    null
-  );
-  const [fetchSchedules, { data: schedulesData, fetchMore: __ }] =
+  const [fetchSchedules, { data: schedulesData }] =
     useLazyQuery<ScheduleQueryResponse>(UserSchedulesQuery, {
-      fetchPolicy: "network-only",
+      fetchPolicy: "no-cache",
     });
+  const [offset, setOffset] = useState<number>(0);
   const [logoutMutation] = useMutation(logoutQuery);
   const { setUser, user } = useUserContext();
   const router = useRouter();
@@ -80,21 +80,13 @@ export default function UserPage() {
     } else {
       fetchSchedules({
         variables: {
-          take: DEFAULT_SCHEDULE_AMOUNT,
-          cursor: cursorItem?.id ?? null,
+          take: DEFAULT_SCHEDULE_AMOUNT * 2,
+          offset: offset * DEFAULT_SCHEDULE_AMOUNT,
         },
       });
       setUser(data.me);
     }
   }, [data, router]);
-
-  useEffect(() => {
-    if (schedulesData?.schedules) {
-      setCursorItem(
-        schedulesData.schedules[schedulesData.schedules.length - 1]
-      );
-    }
-  }, [schedulesData]);
 
   return (
     <div className="flex flex-col space-y-4 items-center">
@@ -102,9 +94,49 @@ export default function UserPage() {
         {user ? <User logout={logout} /> : <h1>Loading</h1>}
       </div>
       {user && schedulesData?.schedules && (
-        <div className="bg-white min-w-content rounded-xl md:p-10 p-5 shadow-md">
-          <UserScheduleList userSchedules={schedulesData?.schedules} />
-        </div>
+        <>
+          <div className="flex flex-col justify-center space-y-4 bg-white min-w-content rounded-xl md:p-10 p-5 shadow-md">
+            <UserScheduleList
+              userSchedules={schedulesData?.schedules.slice(0, 5)}
+            />
+            <div className="flex justify-between m-4">
+              {(schedulesData.schedules.length === DEFAULT_SCHEDULE_AMOUNT ||
+                schedulesData.schedules.length >=
+                  DEFAULT_SCHEDULE_AMOUNT + 1) && (
+                <button
+                  onClick={() => {
+                    setOffset(offset + 1);
+                    fetchSchedules({
+                      variables: {
+                        take: DEFAULT_SCHEDULE_AMOUNT,
+                        offset: (offset + 1) * DEFAULT_SCHEDULE_AMOUNT,
+                      },
+                    });
+                  }}
+                  className="text-slate-400"
+                >
+                  Next page
+                </button>
+              )}
+              {offset !== 0 && (
+                <button
+                  onClick={() => {
+                    setOffset(offset - 1);
+                    fetchSchedules({
+                      variables: {
+                        take: DEFAULT_SCHEDULE_AMOUNT,
+                        offset: (offset - 1) * DEFAULT_SCHEDULE_AMOUNT,
+                      },
+                    });
+                  }}
+                  className="text-slate-400"
+                >
+                  Previous page
+                </button>
+              )}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

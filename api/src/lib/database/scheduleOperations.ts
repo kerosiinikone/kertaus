@@ -48,12 +48,17 @@ export class ScheduleModel implements ScheduleModelSchema {
     });
   }
   static async getScheduleById(sid: string) {
-    return await schedule.findFirst({
+    const scheduleResponse = await schedule.findFirst({
       where: {
         id: sid,
       },
     });
+    return {
+      ...scheduleResponse,
+      content: JSON.parse(scheduleResponse.content),
+    };
   }
+
   static async getAllSchedules(fetchOptions: FetchOptions) {
     return await schedule.findMany(fetchOptions);
   }

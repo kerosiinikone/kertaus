@@ -15,7 +15,7 @@ export interface ScheduleModelSchema {
 
 export interface ScheduleSchema {
   aiheet: string[];
-  teoriat: string[];
+  teoriat: string;
   tehtavananto: number;
   kesto: number;
 }

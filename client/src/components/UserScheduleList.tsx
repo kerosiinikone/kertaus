@@ -13,7 +13,7 @@ const UserScheduleList: React.FC<UserScheduleListProps> = ({
         return (
           <div
             key={schedule.id}
-            className="flex flex-row items-center space-x-10 border-b-2 border-slate-200 p-4"
+            className="flex flex-row justify-between items-center space-x-10 border-b-2 border-slate-200 p-4"
           >
             <h1>{schedule.name ?? "Schedule"}</h1>
             <h2 className="text-slate-400">{schedule.id}</h2>

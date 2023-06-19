@@ -27,10 +27,11 @@ const AIWrapper: React.FC<AIProps> = ({ subjectList, periods, submit }) => {
   return (
     <div className="flex flex-col justify-center items-center bg-gradient-to-l from-neutral-100 to-neutral-150 min-w-content md:mx-10 mx-0 rounded-2xl shadow-lg md:p-2 p-0">
       <div className="flex flex-col justify-center items-center space-y-10 bg-white min-w-content rounded-xl md:p-20 p-7">
-        <div>
+        <div className="text-center">
           <h1 className="md:text-4xl text-2xl text-slate-500">
             Luo kertaussuunnitelma
           </h1>
+          <h2 className="md:text-lg text-md text-slate-400">Tekoäly</h2>
         </div>
         <div className="min-w-[100px] border-2 rounded-md"></div>
         <div className="flex flex-col justify-center items-center space-y-4 flex-wrap max-w-fit">

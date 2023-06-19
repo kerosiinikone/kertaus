@@ -74,16 +74,12 @@ export class ScheduleResolver {
   @UseMiddleware(authenticationMiddleWare)
   @Query(() => [Schedule])
   async schedules(
-    @Args() { take, cursor }: ScheduleQueryParams,
+    @Args() { take, offset }: ScheduleQueryParams,
     @Ctx() { res }: ContextType
   ) {
     return await ScheduleModel.getAllSchedules({
       take,
-      skip: cursor ? 1 : 0,
-      cursor: cursor ? { id: cursor } : undefined,
-      orderBy: {
-        id: "asc",
-      },
+      skip: offset,
       where: {
         authorId: res.locals.user,
       },
