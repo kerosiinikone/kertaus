@@ -3,6 +3,7 @@
 import ScheduleWrapper from "@/components/ScheduleWrapper";
 import { gql, useQuery } from "@apollo/client";
 import { ScheduleSchema } from "../../../../../shared";
+import LoadingComponent from "@/components/LoadingComponent";
 
 interface SingleScheduleResponse {
   schedule: {
@@ -40,7 +41,7 @@ export default function SchedulePage({ params }: { params: { sid: string } }) {
             name={data.schedule.name}
           />
         ) : (
-          <h1>Loading</h1>
+          <LoadingComponent />
         )}
       </div>
     </>

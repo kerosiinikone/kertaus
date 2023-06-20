@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ScheduleModelSchema } from "../../../../shared";
 import useRefresh from "@/hooks/useRefresh";
+import LoadingComponent from "@/components/LoadingComponent";
 
 const DEFAULT_SCHEDULE_AMOUNT = 5;
 
@@ -89,7 +90,7 @@ export default function UserPage() {
   return (
     <div className="flex flex-col space-y-4 items-center">
       <div className="bg-white min-w-content rounded-xl md:p-20 p-4 shadow-md">
-        {user ? <User logout={logout} /> : <h1>Loading</h1>}
+        {user ? <User logout={logout} /> : <LoadingComponent />}
       </div>
       {user && schedulesData?.schedules && (
         <>

@@ -2,7 +2,7 @@
 
 export default function Error({ reset }: { error: Error; reset: () => void }) {
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-r from-white to-neutral-100">
+    <div className="flex flex-col justify-center items-center h-screen bg-white">
       <h2>Something went wrong!</h2>
       <a
         onClick={() => reset()}
