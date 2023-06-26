@@ -15,8 +15,6 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [authFn] = useAuth();
 
-  // ERROR HANDLING, React.createPortal
-
   return (
     <div className="flex md:flex-col flex-row items-center">
       <div className="flex flex-col space-y-7 justify-center items-center bg-white min-w-content rounded-xl md:p-20 p-7 shadow-md">

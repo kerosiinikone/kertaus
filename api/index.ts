@@ -15,7 +15,6 @@ import { ScheduleResolver } from "./src/models/Schedule/resolver.ts";
 import { AuthResolver } from "./src/models/User/auth/authResolver.ts";
 import { UserResolver } from "./src/models/User/userResolver.ts";
 import { refreshRouter } from "./src/routes/refresh.ts";
-
 const { json } = pkg;
 dotenv.config();
 

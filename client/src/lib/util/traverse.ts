@@ -1,62 +1,13 @@
 import { CodeType } from "../../../../shared";
 import lops2019 from "./lops2019";
 
-const getCourseCodes = (): Array<string> => {
-  let courseCodes: string[] = [];
-  for (let i of lops2019) {
-    const codes: string[] = i.kurssit?.map((course) =>
-      course.koodi.toLowerCase()
-    );
-    courseCodes = courseCodes.concat(codes);
-  }
-  return courseCodes;
-};
-
-const getCourseNames = (): Array<string> => {
-  let courseNames: string[] = [];
-  for (let i of lops2019) {
-    const codes: string[] = i.kurssit?.map((course) =>
-      course.nimi.toLowerCase()
-    );
-    courseNames = courseNames.concat(codes);
-  }
-  return courseNames;
-};
-
-const getSubjects = (): Array<string> => {
-  let subjects: string[] = [];
-  for (let i of lops2019) {
-    subjects.push(i.oppiaine.toLowerCase());
-  }
-  return subjects;
-};
-
-export const traverseCourses = (code: string) => {
-  let result: string[] = [];
-  for (let i of lops2019) {
-    if (i.oppiaine.toLowerCase() === code.toLowerCase()) {
-      result = i.kurssit.map((c) => c.nimi);
-      break;
-    }
-  }
-  return result;
-};
-
-const getCourseNameByCode = (code: string): string => {
-  let courses: { koodi: string; nimi: string }[] = [];
-  for (let i of lops2019) {
-    const codes: { koodi: string; nimi: string }[] = i.kurssit;
-    courses = courses.concat(codes);
-  }
-  let foundName = "";
-  for (let i of courses) {
-    if (i.koodi.toLowerCase() === code.toLowerCase()) {
-      foundName = i.nimi;
-      break;
-    }
-  }
-  return foundName;
-};
+interface CodesWithCourse {
+  subject?: string;
+  course?: {
+    koodi: string;
+    nimi: string;
+  };
+}
 
 export type ContainsType = {
   subject?: string;
@@ -65,23 +16,68 @@ export type ContainsType = {
   courses?: string[];
 };
 
+export const traverseCourses = (code: string) => {
+  let result: string[] = [];
+  for (let i of lops2019.raw) {
+    if (i.oppiaine.toLowerCase() === code.toLowerCase()) {
+      result = i.kurssit.map((c) => c.nimi);
+      break;
+    }
+  }
+  return result;
+};
+
+const getCourseNameByCode = (code: string): CodesWithCourse => {
+  let courses: CodesWithCourse[] = [];
+  for (let i of lops2019.raw) {
+    const ICourses: { koodi: string; nimi: string }[] = i.kurssit;
+    const codesWithCourseId = ICourses.map((course) => {
+      return {
+        subject: i.oppiaine,
+        course,
+      };
+    });
+    courses = courses.concat(codesWithCourseId);
+  }
+  let foundItem: CodesWithCourse = {};
+  for (let i of courses) {
+    if (
+      i.course?.koodi.toLowerCase() === code.toLowerCase() ||
+      i.course?.nimi.toLowerCase() === code.toLowerCase()
+    ) {
+      foundItem = i;
+      break;
+    }
+  }
+  return foundItem;
+};
+
 export const contains = (code: string): ContainsType => {
-  if (getSubjects().includes(code))
+  let returnObject: ContainsType = { contains: false };
+
+  if (lops2019.subjects.includes(code))
     return {
       contains: true,
       subjectType: CodeType.SUBJECT,
       courses: traverseCourses(code),
     };
-  if (getCourseCodes().includes(code))
+  if (lops2019.codes.includes(code)) {
+    const foundItem = getCourseNameByCode(code);
     return {
-      subject: getCourseNameByCode(code),
+      subject: `${foundItem.subject}: ${foundItem.course?.nimi}`,
       contains: true,
       subjectType: CodeType.COURSE,
       courses: [],
     };
-  if (getCourseNames().includes(code))
-    return { contains: true, subjectType: CodeType.COURSE, courses: [] };
-  return { contains: false };
+  }
+  if (lops2019.courseNames.includes(code)) {
+    const foundItem = getCourseNameByCode(code);
+    return {
+      subject: `${foundItem.subject}: ${foundItem.course?.nimi}`,
+      contains: true,
+      subjectType: CodeType.COURSE,
+      courses: [],
+    };
+  }
+  return returnObject;
 };
-
-/* CACHE and REFACTOR */

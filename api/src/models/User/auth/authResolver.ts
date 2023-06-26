@@ -33,9 +33,7 @@ export class AuthResolver {
       setCookies(accessToken, refreshToken, res);
 
       return newUser;
-    } catch (error) {
-      throw error;
-    }
+    } catch (error) {}
   }
 
   @Mutation(() => User)
@@ -43,17 +41,21 @@ export class AuthResolver {
     @Arg("input") { email, password }: AuthInput,
     @Ctx() { res }: ContextType
   ): Promise<User> {
-    const user = await getUserByParam({ email });
+    try {
+      const user = await getUserByParam({ email });
 
-    if (!user) throw Error("User doesn't exists!");
+      if (!user) throw Error("User doesn't exists!");
 
-    if (!(await comparePasswords(password, user.password)))
-      throw Error("Wrong credentials!");
+      if (!(await comparePasswords(password, user.password)))
+        throw Error("Wrong credentials!");
 
-    const { accessToken, refreshToken } = buildTokens(user);
-    setCookies(accessToken, refreshToken, res);
+      const { accessToken, refreshToken } = buildTokens(user);
+      setCookies(accessToken, refreshToken, res);
 
-    return user;
+      return user;
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Mutation(() => Boolean)

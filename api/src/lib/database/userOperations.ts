@@ -11,12 +11,12 @@ export interface FetchOptions {
   skip?: number;
 }
 
-export interface QueryParam {
+interface QueryParam {
   email?: string;
   id?: string;
 }
 
-export interface UserInput {
+interface UserInput {
   email: string;
   password: string;
   tokenVersion?: number;
@@ -29,9 +29,6 @@ export const getAllUsers = async (fetchOptions: FetchOptions) => {
 export const getUserByParam = async (param: QueryParam) => {
   return await user.findFirst({
     where: param,
-    include: {
-      schedules: true,
-    },
   });
 };
 

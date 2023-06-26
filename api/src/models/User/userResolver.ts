@@ -9,11 +9,6 @@ import type { ContextType } from "../../../../shared/index.js";
 
 @Resolver(User)
 export class UserResolver {
-  @Query(() => [User])
-  async users() {
-    return await getAllUsers({});
-  }
-
   @UseMiddleware(getUserMiddleware)
   @Query(() => User, { nullable: true })
   async me(@Ctx() { res }: ContextType) {

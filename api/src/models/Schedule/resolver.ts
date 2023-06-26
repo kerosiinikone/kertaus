@@ -7,7 +7,11 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import type { ContextType, ScheduleSchema } from "../../../../shared/index.ts";
+import {
+  CodeType,
+  type ContextType,
+  type ScheduleSchema,
+} from "../../../../shared/index.ts";
 import { ScheduleModel } from "../../lib/database/scheduleOperations.ts";
 import { requestSchedule } from "../../lib/openai/completions.ts";
 import {
@@ -34,7 +38,10 @@ export class ScheduleResolver {
     @Ctx() { res }: ContextType
   ) {
     const content: ScheduleSchema = await requestSchedule({
-      subject,
+      subject:
+        subjectType === CodeType.COURSE
+          ? subject.split(": ").join(", josta tarkemmin aihe ")
+          : subject,
       subjectType,
       intensity,
       timePeriod,
@@ -43,7 +50,8 @@ export class ScheduleResolver {
 
     const schedule = new ScheduleModel(
       content,
-      name ?? subject,
+      name ??
+        (subjectType === CodeType.COURSE ? subject.split(": ")[1] : subject),
       res.locals.user ?? null
     );
 
