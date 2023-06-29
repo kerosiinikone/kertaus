@@ -14,7 +14,7 @@ export const requestSchedule = async (input: PromptInput) => {
   const options = {
     model: DEFAULT_MODEL,
     messages: initialPrompt,
-    temperature: 1,
+    temperature: 0.7,
     max_tokens: 2048,
     top_p: 1,
     presence_penalty: 0,

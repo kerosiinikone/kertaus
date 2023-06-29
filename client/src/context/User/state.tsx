@@ -7,7 +7,7 @@ import {
   useContext,
   useState,
 } from "react";
-import { User } from "../../../shared";
+import { User } from "../../../../shared";
 
 export interface UserContextType {
   user: User | null;

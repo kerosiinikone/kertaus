@@ -2,7 +2,6 @@
 
 import User from "@/components/User";
 import UserScheduleList from "@/components/UserScheduleList";
-import { useUserContext } from "@/context/UserContext";
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,10 +10,12 @@ import useRefresh from "@/hooks/useRefresh";
 import LoadingComponent from "@/components/LoadingComponent";
 import { createPortal } from "react-dom";
 import DeleteModal from "@/components/DeleteModal";
+import useDelete from "@/hooks/useDelete";
+import { useUserContext } from "@/context/User";
 
-const DEFAULT_SCHEDULE_AMOUNT = 5;
+export const DEFAULT_SCHEDULE_AMOUNT = 5;
 
-const MeQuery = gql`
+const meQuery = gql`
   query {
     me {
       email
@@ -23,15 +24,7 @@ const MeQuery = gql`
   }
 `;
 
-const deleteScheduleMutation = gql`
-  mutation ($sid: String!) {
-    deleteSchedule(sid: $sid) {
-      id
-    }
-  }
-`;
-
-const UserSchedulesQuery = gql`
+const userSchedulesQuery = gql`
   query ($take: Float!, $offset: Float!) {
     schedules(take: $take, offset: $offset) {
       id
@@ -46,17 +39,16 @@ const logoutQuery = gql`
   }
 `;
 
-interface ScheduleQueryResponse {
+export interface ScheduleQueryResponse {
   schedules: ScheduleModelSchema[];
 }
 
-interface DeleteScheduleResponse {
-  deleteSchedule: {
-    id?: string;
-  };
+export interface FetchQueryVars {
+  take: number;
+  offset: number;
 }
 
-interface UserQueryResponse {
+export interface UserQueryResponse {
   me: {
     id?: string;
     email?: string;
@@ -65,21 +57,27 @@ interface UserQueryResponse {
 }
 
 export default function UserPage() {
-  const { data, refetch } = useQuery<UserQueryResponse>(MeQuery, {
-    fetchPolicy: "no-cache",
-  });
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [higlightSchedule, setHighlightSchedule] = useState<string>("");
-  const [deleteBySid, { data: deletedData }] =
-    useMutation<DeleteScheduleResponse>(deleteScheduleMutation);
-  const [fetchSchedules, { data: schedulesData }] =
-    useLazyQuery<ScheduleQueryResponse>(UserSchedulesQuery, {
-      fetchPolicy: "no-cache",
-    });
-  const [offset, setOffset] = useState<number>(0);
-  const [logoutMutation] = useMutation(logoutQuery);
   const { setUser, user } = useUserContext();
   const router = useRouter();
+  const [offset, setOffset] = useState<number>(0);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [higlightSchedule, setHighlightSchedule] = useState<string>("");
+
+  const [fetchSchedules, { data: schedulesData }] = useLazyQuery<
+    ScheduleQueryResponse,
+    FetchQueryVars
+  >(userSchedulesQuery, {
+    fetchPolicy: "no-cache",
+  });
+  const { data, refetch } = useQuery<UserQueryResponse>(meQuery, {
+    fetchPolicy: "no-cache",
+  });
+  const [logoutMutation] = useMutation(logoutQuery);
+
+  const [deleteSchedule] = useDelete({
+    fetchSchedules,
+    offset,
+  });
 
   const logout = () => {
     setUser(null);
@@ -94,11 +92,7 @@ export default function UserPage() {
   });
 
   const deleteModal = () => {
-    deleteBySid({
-      variables: {
-        sid: higlightSchedule,
-      },
-    });
+    deleteSchedule(higlightSchedule);
     setOpenDeleteModal(false);
     setHighlightSchedule("");
   };
@@ -107,16 +101,6 @@ export default function UserPage() {
     setHighlightSchedule(sid);
     setOpenDeleteModal(true);
   };
-
-  useEffect(() => {
-    if (deletedData?.deleteSchedule.id)
-      fetchSchedules({
-        variables: {
-          take: DEFAULT_SCHEDULE_AMOUNT * 2,
-          offset: offset * DEFAULT_SCHEDULE_AMOUNT,
-        },
-      });
-  }, [deletedData]);
 
   useEffect(() => {
     if (offset !== 0 && schedulesData?.schedules.length === 0) {

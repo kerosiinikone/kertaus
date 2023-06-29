@@ -21,7 +21,6 @@ const ScheduleWrapper: React.FC<ScheduleProps> = ({ content, name }) => {
   const [scheduleNode, setActiveSchduleNode] = useState<ScheduleNode | null>(
     null
   );
-
   return (
     <>
       <div className="flex flex-col justify-center items-center bg-gradient-to-l from-neutral-100 to-neutral-150 min-w-content md:mx-10 mx-0 rounded-2xl shadow-lg md:p-2 p-0">

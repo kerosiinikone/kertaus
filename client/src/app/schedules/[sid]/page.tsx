@@ -12,7 +12,7 @@ interface SingleScheduleResponse {
   };
 }
 
-const ScheduleQuery = gql`
+const scheduleQuery = gql`
   query ($sid: String!) {
     schedule(sid: $sid) {
       name
@@ -27,7 +27,7 @@ const ScheduleQuery = gql`
 `;
 
 export default function SchedulePage({ params }: { params: { sid: string } }) {
-  const { data } = useQuery<SingleScheduleResponse>(ScheduleQuery, {
+  const { data } = useQuery<SingleScheduleResponse>(scheduleQuery, {
     variables: {
       sid: params.sid,
     },

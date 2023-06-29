@@ -1,5 +1,5 @@
 import { AuthInput } from "@/app/auth/page";
-import { useUserContext } from "@/context/UserContext";
+import { useUserContext } from "@/context/User";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
