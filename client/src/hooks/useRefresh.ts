@@ -11,7 +11,7 @@ interface useRefreshArgs {
 const useRefresh = ({ refetch, logout, router }: useRefreshArgs) => {
   const refresh = () => {
     try {
-      fetch("http://localhost:4000/refresh", { credentials: "include" })
+      fetch(`${process.env.SERVER_URL!}/refresh`, { credentials: "include" })
         .then(() => {
           refetch().then(({ data }) => {
             if (!data.me) {

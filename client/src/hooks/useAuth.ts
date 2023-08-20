@@ -1,8 +1,9 @@
 import { AuthInput } from "@/app/auth/page";
-import { useUserContext } from "@/context/User";
-import { gql, useMutation } from "@apollo/client";
+import { useGlobalErrorContext } from "@/context/Error/state";
+import { useUserContext } from "@/context/User/state";
+import { ApolloError, gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export interface RegisterResponse {
   register: {
@@ -38,6 +39,7 @@ export const registerQuery = gql`
 
 const useAuth = () => {
   const { setUser } = useUserContext();
+  const { addError } = useGlobalErrorContext();
   const router = useRouter();
   const [login, { data: LData, error: LError }] =
     useMutation<LoginResponse>(loginQuery);
@@ -68,6 +70,18 @@ const useAuth = () => {
       router.push("/");
     }
   }, [RData]);
+
+  useEffect(() => {
+    if (LError) {
+      addError([LError]);
+    }
+  }, [LError]);
+
+  useEffect(() => {
+    if (RError) {
+      addError([RError]);
+    }
+  }, [RError]);
 
   return [authFn] as const;
 };

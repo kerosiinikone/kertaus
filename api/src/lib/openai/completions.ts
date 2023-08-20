@@ -3,7 +3,7 @@ import { CodeType, PromptInput } from "../../../../shared/index.ts";
 import { openai } from "./index.ts";
 import { PRE_PROMPT } from "./prompts.ts";
 
-const DEFAULT_MODEL = "gpt-3.5-turbo";
+const DEFAULT_MODEL = process.env.AI_MODEL || "gpt-3.5-turbo";
 
 export const requestSchedule = async (input: PromptInput) => {
   const initialPrompt: ChatCompletionRequestMessage[] = [

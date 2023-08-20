@@ -47,7 +47,7 @@ const main = async () => {
       "/refresh",
       cors<cors.CorsRequest>({
         credentials: true,
-        origin: [process.env.CLIENT_URL, "http://localhost:3000/me"],
+        origin: [process.env.CLIENT_URL, `${process.env.CLIENT_URL}/me`],
       })
     )
     .use("/refresh", refreshRouter);

@@ -2,7 +2,13 @@
 
 import User from "@/components/User";
 import UserScheduleList from "@/components/UserScheduleList";
-import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import {
+  ApolloError,
+  gql,
+  useLazyQuery,
+  useMutation,
+  useQuery,
+} from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ScheduleModelSchema } from "../../../../shared";
@@ -11,7 +17,9 @@ import LoadingComponent from "@/components/LoadingComponent";
 import { createPortal } from "react-dom";
 import DeleteModal from "@/components/DeleteModal";
 import useDelete from "@/hooks/useDelete";
-import { useUserContext } from "@/context/User";
+import { useUserContext } from "@/context/User/state";
+import ErrorMsg from "@/components/error/ErrorMsg";
+import { useGlobalErrorContext } from "@/context/Error/state";
 
 export const DEFAULT_SCHEDULE_AMOUNT = 5;
 
@@ -62,17 +70,20 @@ export default function UserPage() {
   const [offset, setOffset] = useState<number>(0);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [higlightSchedule, setHighlightSchedule] = useState<string>("");
-
-  const [fetchSchedules, { data: schedulesData }] = useLazyQuery<
-    ScheduleQueryResponse,
-    FetchQueryVars
-  >(userSchedulesQuery, {
+  const [errorMsg] = useState<Array<ApolloError | undefined>>([]);
+  const { globalError, addError } = useGlobalErrorContext();
+  const [fetchSchedules, { data: schedulesData, error: scheduleError }] =
+    useLazyQuery<ScheduleQueryResponse, FetchQueryVars>(userSchedulesQuery, {
+      fetchPolicy: "no-cache",
+    });
+  const {
+    data,
+    refetch,
+    error: userError,
+  } = useQuery<UserQueryResponse>(meQuery, {
     fetchPolicy: "no-cache",
   });
-  const { data, refetch } = useQuery<UserQueryResponse>(meQuery, {
-    fetchPolicy: "no-cache",
-  });
-  const [logoutMutation] = useMutation(logoutQuery);
+  const [logoutMutation, { error: logoutError }] = useMutation(logoutQuery);
 
   const [deleteSchedule] = useDelete({
     fetchSchedules,
@@ -115,7 +126,7 @@ export default function UserPage() {
   }, [schedulesData]);
 
   useEffect(() => {
-    if (!data) {
+    if (!data?.me) {
       refresh();
     } else {
       fetchSchedules({
@@ -127,6 +138,16 @@ export default function UserPage() {
       setUser(data.me);
     }
   }, [data, router]);
+
+  // Refactor and abstract
+
+  useEffect(() => {
+    let errorStack: Array<ApolloError | undefined> = [];
+    if (logoutError) errorStack.push(logoutError);
+    if (scheduleError) errorStack.push(scheduleError);
+    if (userError) errorStack.push(userError);
+    addError(errorStack);
+  }, [logoutError, scheduleError, userError]);
 
   return (
     <>
@@ -188,6 +209,8 @@ export default function UserPage() {
           />,
           document.body
         )}
+      {globalError.length >= 1 &&
+        createPortal(<ErrorMsg error={errorMsg} />, document.body)}
     </>
   );
 }

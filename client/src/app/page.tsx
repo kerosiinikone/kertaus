@@ -7,11 +7,14 @@ import {
   Periods,
   PromptInput,
 } from "../../../shared/index";
-import { gql, useMutation } from "@apollo/client";
+import { ApolloError, gql, useMutation } from "@apollo/client";
 import { getValidatedInput } from "@/lib/util/validator";
 import { createPortal } from "react-dom";
 import ModalLoader from "@/components/ModalLoader";
 import ScheduleWrapper from "@/components/ScheduleWrapper";
+import ErrorMsg from "@/components/error/ErrorMsg";
+import { useEffect, useState } from "react";
+import { useGlobalErrorContext } from "@/context/Error/state";
 
 export interface Subject {
   name: string;
@@ -72,10 +75,14 @@ const scheduleRequestMutation = gql`
 `;
 
 export default function AILandingPage() {
-  const [requestSchedule, { loading: loadingSchedule, data: scheduleData }] =
-    useMutation<ScheduleMutation>(scheduleRequestMutation, {
-      fetchPolicy: "no-cache",
-    });
+  const [
+    requestSchedule,
+    { loading: loadingSchedule, data: scheduleData, error: scheduleError },
+  ] = useMutation<ScheduleMutation>(scheduleRequestMutation, {
+    fetchPolicy: "no-cache",
+  });
+  const [errorMsg, setErrorMsg] = useState<Array<ApolloError | undefined>>([]);
+  const { globalError, addError } = useGlobalErrorContext();
 
   const MOCKUP_SUBMIT = (input: {
     subject: string;
@@ -92,6 +99,12 @@ export default function AILandingPage() {
 
     requestSchedule({ variables: { ...promptInput } });
   };
+
+  useEffect(() => {
+    if (scheduleError) {
+      addError([scheduleError]);
+    }
+  }, [scheduleError]);
 
   return (
     <>
@@ -110,6 +123,8 @@ export default function AILandingPage() {
         )}
       </div>
       {loadingSchedule && createPortal(<ModalLoader />, document.body)}
+      {globalError.length >= 1 &&
+        createPortal(<ErrorMsg error={errorMsg} />, document.body)}
     </>
   );
 }

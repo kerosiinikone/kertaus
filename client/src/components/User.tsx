@@ -1,6 +1,6 @@
 "use client";
 
-import { useUserContext } from "@/context/UserContext";
+import { useUserContext } from "@/context/User/state";
 import { IconContext } from "react-icons";
 import { CiUser } from "react-icons/ci";
 
