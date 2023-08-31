@@ -6,8 +6,8 @@ Server
 npm run start
 ```
 
-Client (/client)
+Client
 ```bash
-cd ./client/
+cd .\client\
 npm run dev
 ```
