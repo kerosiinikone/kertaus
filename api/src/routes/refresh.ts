@@ -1,11 +1,6 @@
 import express, { Request, Response } from "express";
 import { getUserByParam } from "../lib/database/userOperations.ts";
-import {
-  VerifiedRefreshToken,
-  refreshTokens,
-  setCookies,
-  verifyRefreshToken,
-} from "../lib/util/cookies.ts";
+import { VerifiedRefreshToken, Cookie } from "../lib/util/cookies.ts";
 
 export const refreshRouter = express.Router();
 
@@ -13,14 +8,15 @@ refreshRouter.get("/", async (req: Request, res: Response) => {
   try {
     const refreshToken = req.cookies["refreshToken"];
 
-    let vToken: VerifiedRefreshToken = verifyRefreshToken(refreshToken);
+    let vToken: VerifiedRefreshToken = Cookie.verifyRefreshToken(refreshToken);
     const userFound = await getUserByParam({ id: vToken.id });
 
     if (!userFound) throw Error("No auth");
 
-    const { access, refresh } = refreshTokens(vToken, userFound.tokenVersion);
+    const cookie = new Cookie(userFound);
 
-    setCookies(access, refresh, res);
+    cookie.refreshTokens(vToken, userFound.tokenVersion);
+    cookie.setCookies(res);
   } catch (error) {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");

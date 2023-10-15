@@ -1,5 +1,5 @@
 import { MiddlewareFn } from "type-graphql";
-import { verifyAccessToken } from "../cookies.ts";
+import { Cookie } from "../cookies.ts";
 import { ContextType } from "../../../../../shared";
 import { Request } from "express";
 import { ScheduleModel } from "../../database/scheduleOperations.ts";
@@ -42,5 +42,5 @@ export const getUserMiddleware: MiddlewareFn<ContextType> = async (
 
 const getVerifiedToken = (req: Request) => {
   const token: string = req.cookies["accessToken"];
-  return verifyAccessToken(token);
+  return Cookie.verifyAccessToken(token);
 };

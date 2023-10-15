@@ -6,7 +6,7 @@ import {
   getUserByParam,
 } from "../../../lib/database/userOperations.js";
 import { authenticationMiddleWare } from "../../../lib/util/auth/index.js";
-import { buildTokens, setCookies } from "../../../lib/util/cookies.js";
+import { Cookie } from "../../../lib/util/cookies.js";
 import { comparePasswords, hashPassword } from "../../../lib/util/crypt.js";
 import { User } from "../type.js";
 import { AuthInput } from "./type.js";
@@ -28,9 +28,10 @@ export class AuthResolver {
       const hashedPassword = await hashPassword(password);
 
       const newUser = await createUser({ email, password: hashedPassword });
+      const cookie = new Cookie(newUser);
 
-      const { accessToken, refreshToken } = buildTokens(newUser);
-      setCookies(accessToken, refreshToken, res);
+      cookie.buildTokens();
+      cookie.setCookies(res);
 
       return newUser;
     } catch (error) {}
@@ -44,13 +45,15 @@ export class AuthResolver {
     try {
       const user = await getUserByParam({ email });
 
+      const cookie = new Cookie(user);
+
       if (!user) throw Error("User doesn't exists!");
 
       if (!(await comparePasswords(password, user.password)))
         throw Error("Wrong credentials!");
 
-      const { accessToken, refreshToken } = buildTokens(user);
-      setCookies(accessToken, refreshToken, res);
+      cookie.buildTokens();
+      cookie.setCookies(res);
 
       return user;
     } catch (error) {

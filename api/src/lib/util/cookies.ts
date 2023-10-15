@@ -19,67 +19,151 @@ export interface VerifiedAccessToken extends AccessTokenPayload {
   exp: number;
 }
 
-export const buildTokens = (user: User) => {
-  const refreshTokenPayload: RefreshTokenPayload = {
-    id: user.id,
-    version: user.tokenVersion,
+type Tokens = {
+  accessToken?: string;
+  refreshToken?: string;
+};
+
+interface CookieGen {
+  buildTokens: (user: User) => Tokens;
+  setCookies: (res: Response) => void;
+}
+
+export class Cookie implements CookieGen {
+  private accessToken: string;
+  private refreshToken: string;
+  private user: User;
+  private defaultOptions: CookieOptions = {
+    sameSite: "none",
+    httpOnly: true,
+    secure: true,
   };
-  const accessTokenPayload: AccessTokenPayload = { id: user.id };
 
-  const accessToken = signAccessToken(accessTokenPayload);
-  const refreshToken = signRefreshToken(refreshTokenPayload);
+  constructor(user: User) {
+    this.user = user;
+  }
 
-  return { accessToken, refreshToken };
-};
+  buildTokens() {
+    const refreshTokenPayload: RefreshTokenPayload = {
+      id: this.user.id,
+      version: this.user.tokenVersion,
+    };
+    const accessTokenPayload: AccessTokenPayload = { id: this.user.id };
 
-const signAccessToken = (payload: AccessTokenPayload) => {
-  return jwt.sign(payload, process.env.SECRET_TOKEN, { expiresIn: "15m" });
-};
+    this.accessToken = this.signAccessToken(accessTokenPayload);
+    this.refreshToken = this.signRefreshToken(refreshTokenPayload);
 
-const signRefreshToken = (payload: RefreshTokenPayload) => {
-  return jwt.sign(payload, process.env.SECRET_TOKEN, { expiresIn: "7d" });
-};
+    return { accessToken: this.accessToken, refreshToken: this.refreshToken };
+  }
 
-const defaultOptions: CookieOptions = {
-  sameSite: "none",
-  httpOnly: true,
-  secure: true,
-};
+  signAccessToken(payload: AccessTokenPayload) {
+    return jwt.sign(payload, process.env.SECRET_TOKEN, { expiresIn: "15m" });
+  }
 
-export const verifyRefreshToken = (token: string) => {
-  try {
-    const payload = verify(
-      token,
-      process.env.SECRET_TOKEN
-    ) as VerifiedRefreshToken;
-    return payload;
-  } catch (error) {}
-};
+  signRefreshToken(payload: RefreshTokenPayload) {
+    return jwt.sign(payload, process.env.SECRET_TOKEN, { expiresIn: "7d" });
+  }
 
-export const verifyAccessToken = (token: string) => {
-  try {
-    const payload = verify(
-      token,
-      process.env.SECRET_TOKEN
-    ) as VerifiedAccessToken;
-    return payload;
-  } catch (error) {}
-};
+  static verifyRefreshToken(token: string) {
+    try {
+      const payload = verify(
+        token,
+        process.env.SECRET_TOKEN
+      ) as VerifiedRefreshToken;
+      return payload;
+    } catch (error) {}
+  }
 
-export const setCookies = (access: string, refresh: string, res: Response) => {
-  res.cookie("accessToken", access, {
-    ...defaultOptions,
-    maxAge: 1000 * 60 * 15,
-  });
-  res.cookie("refreshToken", refresh, {
-    ...defaultOptions,
-    maxAge: 1000 * 60 * 60 * 24 * 7,
-  });
-};
+  static verifyAccessToken(token: string) {
+    try {
+      const payload = verify(
+        token,
+        process.env.SECRET_TOKEN
+      ) as VerifiedAccessToken;
+      return payload;
+    } catch (error) {}
+  }
 
-export const refreshTokens = (token: VerifiedRefreshToken, version: number) => {
-  if (token.version !== version) throw "Token revoked";
-  const access = signAccessToken({ id: token.id });
-  const refresh = signRefreshToken({ id: token.id, version });
-  return { access, refresh };
-};
+  setCookies(res: Response) {
+    res.cookie("accessToken", this.accessToken, {
+      ...this.defaultOptions,
+      maxAge: 1000 * 60 * 15,
+    });
+    res.cookie("refreshToken", this.refreshToken, {
+      ...this.defaultOptions,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+  }
+
+  refreshTokens(token: VerifiedRefreshToken, version: number) {
+    if (token.version !== version) throw "Token revoked";
+    this.accessToken = this.signAccessToken({ id: token.id });
+    this.refreshToken = this.signRefreshToken({ id: token.id, version });
+    return { accessToken: this.accessToken, refreshToken: this.refreshToken };
+  }
+}
+
+// export const buildTokens = (user: User) => {
+//   const refreshTokenPayload: RefreshTokenPayload = {
+//     id: user.id,
+//     version: user.tokenVersion,
+//   };
+//   const accessTokenPayload: AccessTokenPayload = { id: user.id };
+
+//   const accessToken = signAccessToken(accessTokenPayload);
+//   const refreshToken = signRefreshToken(refreshTokenPayload);
+
+//   return { accessToken, refreshToken };
+// };
+
+// const signAccessToken = (payload: AccessTokenPayload) => {
+//   return jwt.sign(payload, process.env.SECRET_TOKEN, { expiresIn: "15m" });
+// };
+
+// const signRefreshToken = (payload: RefreshTokenPayload) => {
+//   return jwt.sign(payload, process.env.SECRET_TOKEN, { expiresIn: "7d" });
+// };
+
+// const defaultOptions: CookieOptions = {
+//   sameSite: "none",
+//   httpOnly: true,
+//   secure: true,
+// };
+
+// export const verifyRefreshToken = (token: string) => {
+//   try {
+//     const payload = verify(
+//       token,
+//       process.env.SECRET_TOKEN
+//     ) as VerifiedRefreshToken;
+//     return payload;
+//   } catch (error) {}
+// };
+
+// export const verifyAccessToken = (token: string) => {
+//   try {
+//     const payload = verify(
+//       token,
+//       process.env.SECRET_TOKEN
+//     ) as VerifiedAccessToken;
+//     return payload;
+//   } catch (error) {}
+// };
+
+// export const setCookies = (access: string, refresh: string, res: Response) => {
+//   res.cookie("accessToken", access, {
+//     ...defaultOptions,
+//     maxAge: 1000 * 60 * 15,
+//   });
+//   res.cookie("refreshToken", refresh, {
+//     ...defaultOptions,
+//     maxAge: 1000 * 60 * 60 * 24 * 7,
+//   });
+// };
+
+// export const refreshTokens = (token: VerifiedRefreshToken, version: number) => {
+//   if (token.version !== version) throw "Token revoked";
+//   const accessToken = signAccessToken({ id: token.id });
+//   const refreshToken = signRefreshToken({ id: token.id, version });
+//   return { accessToken, refreshToken };
+// };
