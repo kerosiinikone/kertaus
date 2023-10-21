@@ -1,8 +1,11 @@
 import { MiddlewareFn } from "type-graphql";
 import { Cookie } from "../cookies.ts";
-import { ContextType } from "../../../../../shared";
+import { ContextType } from "../../../../../shared/index.ts";
 import { Request } from "express";
 import { ScheduleModel } from "../../database/scheduleOperations.ts";
+import lops2019 from "../../../../../lops2019.js";
+
+const BAD_INPUT = "Bad Input Error";
 
 export const authenticationMiddleWare: MiddlewareFn<ContextType> = async (
   { context },
@@ -28,6 +31,22 @@ export const authorizeMiddleware: MiddlewareFn<ContextType> = async (
   const schedule = await ScheduleModel.getScheduleById(args.sid);
   if (!schedule || schedule.authorId !== context.res.locals.user)
     throw new Error("Not authorized");
+  return next();
+};
+
+export const typeCheckMiddleware: MiddlewareFn<ContextType> = async (
+  { args },
+  next
+) => {
+  const { subject } = args;
+
+  if (
+    !lops2019.codes.includes(subject) &&
+    !lops2019.subjects.includes(subject) &&
+    !lops2019.courseNames.includes(subject)
+  )
+    throw new Error(BAD_INPUT);
+
   return next();
 };
 

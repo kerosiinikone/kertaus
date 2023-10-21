@@ -24,6 +24,12 @@
     }
   },
   "references": [{ "path": "../shared" }],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/lib/util/lops2019.js"
+  ],
   "exclude": ["node_modules"]
 }

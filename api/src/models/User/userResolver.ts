@@ -4,7 +4,7 @@ import {
   getAllUsers,
   getUserByParam,
 } from "../../lib/database/userOperations.js";
-import { getUserMiddleware } from "../../lib/util/auth/index.js";
+import { getUserMiddleware } from "../../lib/util/middleware/index.js";
 import type { ContextType } from "../../../../shared/index.js";
 
 @Resolver(User)

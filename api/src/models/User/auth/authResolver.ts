@@ -5,7 +5,7 @@ import {
   createUser,
   getUserByParam,
 } from "../../../lib/database/userOperations.js";
-import { authenticationMiddleWare } from "../../../lib/util/auth/index.js";
+import { authenticationMiddleWare } from "../../../lib/util/middleware/index.js";
 import { Cookie } from "../../../lib/util/cookies.js";
 import { comparePasswords, hashPassword } from "../../../lib/util/crypt.js";
 import { User } from "../type.js";

@@ -10,9 +10,11 @@ import {
 } from "react";
 
 export interface GlobalErrorContextType {
-  globalError: Array<ApolloError | undefined>;
-  setGlobalError: Dispatch<SetStateAction<Array<ApolloError | undefined>>>;
-  addError: (error: Array<ApolloError | undefined>) => void;
+  globalError: Array<ApolloError | undefined | Error>;
+  setGlobalError: Dispatch<
+    SetStateAction<Array<ApolloError | undefined | Error>>
+  >;
+  addError: (error: Array<ApolloError | undefined | Error>) => void;
 }
 
 const initialState: GlobalErrorContextType = {
@@ -28,10 +30,10 @@ export const GlobalErrorContextProvider = ({
   children,
 }: React.PropsWithChildren) => {
   const [globalError, setGlobalError] = useState<
-    Array<ApolloError | undefined>
+    Array<ApolloError | undefined | Error>
   >([]);
 
-  const addError = (errors: Array<ApolloError | undefined>) => {
+  const addError = (errors: Array<ApolloError | undefined | Error>) => {
     const noMsg = errors.filter((e) => e?.message);
     if (errors.length >= 1 && noMsg) {
       setGlobalError((s) => {

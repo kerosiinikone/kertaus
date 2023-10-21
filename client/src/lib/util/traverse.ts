@@ -1,5 +1,5 @@
 import { CodeType } from "../../../../shared";
-import lops2019 from "./lops2019";
+import lops2019 from "../../../../lops2019";
 
 interface CodesWithCourse {
   subject?: string;
@@ -17,14 +17,12 @@ export type ContainsType = {
 };
 
 export const traverseCourses = (code: string) => {
-  let result: string[] = [];
   for (let i of lops2019.raw) {
     if (i.oppiaine.toLowerCase() === code.toLowerCase()) {
-      result = i.kurssit.map((c) => c.nimi);
-      break;
+      return i.kurssit.map((c) => c.nimi);
     }
   }
-  return result;
+  return [];
 };
 
 const getCourseNameByCode = (code: string): CodesWithCourse => {
@@ -52,18 +50,18 @@ const getCourseNameByCode = (code: string): CodesWithCourse => {
   return foundItem;
 };
 
-export const contains = (code: string): ContainsType => {
+export const getDetails = (code: string): ContainsType => {
   let returnObject: ContainsType = { contains: false };
+  const foundItem = getCourseNameByCode(code);
 
   if (lops2019.subjects.includes(code))
-    return {
+    returnObject = {
       contains: true,
       subjectType: CodeType.SUBJECT,
       courses: traverseCourses(code),
     };
   if (lops2019.codes.includes(code)) {
-    const foundItem = getCourseNameByCode(code);
-    return {
+    returnObject = {
       subject: `${foundItem.subject}: ${foundItem.course?.nimi}`,
       contains: true,
       subjectType: CodeType.COURSE,
@@ -71,8 +69,7 @@ export const contains = (code: string): ContainsType => {
     };
   }
   if (lops2019.courseNames.includes(code)) {
-    const foundItem = getCourseNameByCode(code);
-    return {
+    returnObject = {
       subject: `${foundItem.subject}: ${foundItem.course?.nimi}`,
       contains: true,
       subjectType: CodeType.COURSE,

@@ -8,7 +8,7 @@ import {
   PromptInput,
 } from "../../../shared/index";
 import { ApolloError, gql, useMutation } from "@apollo/client";
-import { getValidatedInput } from "@/lib/util/validator";
+import { BAD_INPUT, getValidatedInput } from "@/lib/util/validator";
 import { createPortal } from "react-dom";
 import ModalLoader from "@/components/ModalLoader";
 import ScheduleWrapper from "@/components/ScheduleWrapper";
@@ -48,6 +48,12 @@ export interface ScheduleMutation {
   };
 }
 
+type Input = {
+  subject: string;
+  intensity: Intensities;
+  timePeriod: string;
+};
+
 const scheduleRequestMutation = gql`
   mutation (
     $subject: String!
@@ -81,23 +87,24 @@ export default function AILandingPage() {
   ] = useMutation<ScheduleMutation>(scheduleRequestMutation, {
     fetchPolicy: "no-cache",
   });
-  const [errorMsg, setErrorMsg] = useState<Array<ApolloError | undefined>>([]);
   const { globalError, addError } = useGlobalErrorContext();
 
-  const MOCKUP_SUBMIT = (input: {
-    subject: string;
-    intensity: Intensities;
-    timePeriod: string;
-  }) => {
-    const traversionResult = getValidatedInput(input);
-    const promptInput: PromptInput = {
-      ...input,
-      courses: traversionResult.result.courses,
-      subjectType: traversionResult.result.subjectType as CodeType,
-      subject: traversionResult.result.subject ?? input.subject,
-    };
+  const MOCKUP_SUBMIT = (input: Input) => {
+    try {
+      const traversionResult = getValidatedInput(input);
 
-    requestSchedule({ variables: { ...promptInput } });
+      const promptInput: PromptInput = {
+        ...input,
+        courses: traversionResult.result.courses,
+        subjectType: traversionResult.result.subjectType as CodeType,
+        subject: traversionResult.result.subject ?? input.subject,
+      };
+
+      requestSchedule({ variables: { ...promptInput } });
+    } catch (error) {
+      const e = new Error(BAD_INPUT);
+      addError([e]);
+    }
   };
 
   useEffect(() => {
@@ -124,7 +131,7 @@ export default function AILandingPage() {
       </div>
       {loadingSchedule && createPortal(<ModalLoader />, document.body)}
       {globalError.length >= 1 &&
-        createPortal(<ErrorMsg error={errorMsg} />, document.body)}
+        createPortal(<ErrorMsg error={globalError} />, document.body)}
     </>
   );
 }
