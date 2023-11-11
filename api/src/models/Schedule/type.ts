@@ -27,6 +27,12 @@ export class ScheduleSchemaGraph {
 }
 
 @ObjectType()
+export class ScheduleSchemaArray {
+  @Field(() => [ScheduleSchemaGraph])
+  aikataulu: ScheduleSchemaGraph[];
+}
+
+@ObjectType()
 export class Schedule {
   @Field(() => ID)
   id?: string;
@@ -34,8 +40,8 @@ export class Schedule {
   @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field(() => [ScheduleSchemaGraph])
-  content: ScheduleSchema[];
+  @Field(() => ScheduleSchemaArray)
+  content: ScheduleSchema;
 
   @Field(() => User, { nullable: true })
   author?: Promise<User>;

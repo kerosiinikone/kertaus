@@ -14,10 +14,12 @@ export interface ScheduleModelSchema {
 }
 
 export interface ScheduleSchema {
-  aiheet: string[];
-  teoriat: string;
-  tehtavananto: number;
-  kesto: number;
+  aikataulu: {
+    aiheet: string[];
+    teoriat: string;
+    tehtavananto: number;
+    kesto: number;
+  }[];
 }
 
 export interface ContextType {

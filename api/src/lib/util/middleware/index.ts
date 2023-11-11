@@ -39,11 +39,14 @@ export const typeCheckMiddleware: MiddlewareFn<ContextType> = async (
   next
 ) => {
   const { subject } = args;
+  if (typeof subject != "string") throw new Error(BAD_INPUT);
+
+  const s = subject.toLowerCase();
 
   if (
-    !lops2019.codes.includes(subject) &&
-    !lops2019.subjects.includes(subject) &&
-    !lops2019.courseNames.includes(subject)
+    !lops2019.codes.includes(s) &&
+    !lops2019.subjects.includes(s) &&
+    !lops2019.courseNames.includes(s)
   )
     throw new Error(BAD_INPUT);
 

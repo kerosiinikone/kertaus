@@ -8,7 +8,7 @@ import LoadingComponent from "@/components/LoadingComponent";
 interface SingleScheduleResponse {
   schedule: {
     name: string;
-    content: ScheduleSchema[];
+    content: ScheduleSchema;
   };
 }
 
@@ -17,10 +17,12 @@ const scheduleQuery = gql`
     schedule(sid: $sid) {
       name
       content {
-        aiheet
-        kesto
-        tehtavananto
-        teoriat
+        aikataulu {
+          aiheet
+          kesto
+          tehtavananto
+          teoriat
+        }
       }
     }
   }
@@ -37,7 +39,7 @@ export default function SchedulePage({ params }: { params: { sid: string } }) {
       <div className="flex md:flex-col flex-row items-center">
         {data?.schedule ? (
           <ScheduleWrapper
-            content={data.schedule.content}
+            content={data.schedule.content.aikataulu}
             name={data.schedule.name}
           />
         ) : (

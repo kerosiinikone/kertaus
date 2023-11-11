@@ -3,7 +3,7 @@ import { CodeType, PromptInput } from "../../../../shared/index.ts";
 import { openai } from "./index.ts";
 import { PRE_PROMPT } from "./prompts.ts";
 
-const DEFAULT_MODEL = process.env.AI_MODEL || "gpt-3.5-turbo";
+const DEFAULT_MODEL = process.env.AI_MODEL || "gpt-4-1106-preview";
 
 export const requestSchedule = async (input: PromptInput) => {
   const initialPrompt: ChatCompletionRequestMessage[] = [
@@ -14,6 +14,7 @@ export const requestSchedule = async (input: PromptInput) => {
   const options = {
     model: DEFAULT_MODEL,
     messages: initialPrompt,
+    response_format: { type: "json_object" },
     temperature: 0.7,
     max_tokens: 2048,
     top_p: 1,

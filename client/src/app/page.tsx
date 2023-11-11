@@ -40,11 +40,13 @@ export interface ScheduleMutation {
   createSchedule: {
     name: string;
     content: {
-      aiheet: string[];
-      teoriat: string;
-      tehtavananto: number;
-      kesto: number;
-    }[];
+      aikataulu: {
+        aiheet: string[];
+        teoriat: string;
+        tehtavananto: number;
+        kesto: number;
+      }[];
+    };
   };
 }
 
@@ -71,10 +73,12 @@ const scheduleRequestMutation = gql`
     ) {
       name
       content {
-        aiheet
-        teoriat
-        tehtavananto
-        kesto
+        aikataulu {
+          aiheet
+          teoriat
+          tehtavananto
+          kesto
+        }
       }
     }
   }
@@ -118,7 +122,7 @@ export default function AILandingPage() {
       <div className="flex md:flex-col flex-row items-center">
         {scheduleData?.createSchedule?.content ? (
           <ScheduleWrapper
-            content={scheduleData?.createSchedule.content}
+            content={scheduleData?.createSchedule.content.aikataulu}
             name={scheduleData?.createSchedule.name}
           />
         ) : (
