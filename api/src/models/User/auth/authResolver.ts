@@ -1,6 +1,6 @@
 import { validate } from "email-validator";
 import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from "type-graphql";
-import type { ContextType } from "../../../../../shared/index.js";
+import type { ContextType } from "../../../types";
 import {
   createUser,
   getUserByParam,

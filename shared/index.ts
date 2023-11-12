@@ -22,11 +22,6 @@ export interface ScheduleSchema {
   }[];
 }
 
-export interface ContextType {
-  res: Response;
-  req: Request;
-}
-
 export enum Periods {
   "WEEK" = "7 päivää",
   "TWOWEEKS" = "14 päivää",

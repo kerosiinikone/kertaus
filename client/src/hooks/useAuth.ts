@@ -1,9 +1,9 @@
 import { AuthInput } from "@/app/auth/page";
 import { useGlobalErrorContext } from "@/context/Error/state";
 import { useUserContext } from "@/context/User/state";
-import { ApolloError, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export interface RegisterResponse {
   register: {

@@ -2,7 +2,7 @@ import { Resolver, Query, UseMiddleware, Ctx } from "type-graphql";
 import { User } from "./type.js";
 import { getUserByParam } from "../../lib/database/userOperations.js";
 import { getUserMiddleware } from "../../lib/util/middleware/index.js";
-import type { ContextType } from "../../../../shared/index.js";
+import type { ContextType } from "../../types";
 
 @Resolver(User)
 export class UserResolver {

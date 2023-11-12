@@ -1,6 +1,6 @@
 import { MiddlewareFn } from "type-graphql";
 import { Cookie } from "../cookies.js";
-import { ContextType } from "../../../../../shared/index.js";
+import type { ContextType } from "../../../types";
 import { Request } from "express";
 import { ScheduleModel } from "../../database/scheduleOperations.js";
 import lops2019 from "../../../../../lops2019.js";

@@ -7,12 +7,9 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import {
-  CodeType,
-  type ContextType,
-  type ScheduleSchema,
-} from "../../../../shared/index.js";
+import { CodeType, type ScheduleSchema } from "../../../../shared/index.js";
 import { ScheduleModel } from "../../lib/database/scheduleOperations.js";
+import type { ContextType } from "../../types/index.js";
 import { requestSchedule } from "../../lib/openai/completions.js";
 import {
   authenticationMiddleWare,

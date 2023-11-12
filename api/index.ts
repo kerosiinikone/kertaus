@@ -10,7 +10,7 @@ import express from "express";
 import http from "http";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import { ContextType } from "../shared/index";
+import type { ContextType } from "./src/types";
 import { startPrisma } from "./db.js";
 import { ScheduleResolver } from "./src/models/Schedule/resolver.js";
 import { AuthResolver } from "./src/models/User/auth/authResolver.js";
