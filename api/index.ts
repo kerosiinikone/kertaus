@@ -53,6 +53,10 @@ const main = async () => {
     )
     .use("/refresh", refreshRouter);
 
+  app.get("/", (_, res) => {
+    res.send({ health: "Good" });
+  });
+
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: process.env.PORT }, resolve)
   );
