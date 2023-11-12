@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDirs": ["./"],
     "outDir": "../dist",
+    "module": "ESNext",
     "declaration": true,
     "paths": {
       "@shared": ["./shared/"]
