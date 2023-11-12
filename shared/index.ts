@@ -1,5 +1,3 @@
-import type { Request, Response } from "express";
-
 export interface User {
   email?: string;
   id?: string;
