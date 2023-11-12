@@ -6,7 +6,7 @@
   "main": "api/index.js",
   "scripts": {
     "start": "nodemon api/index.ts",
-    "build": "tsc"
+    "build:prod": "tsc"
   },
   "author": "",
   "license": "ISC",
