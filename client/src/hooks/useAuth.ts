@@ -72,15 +72,11 @@ const useAuth = () => {
   }, [RData]);
 
   useEffect(() => {
-    if (LError) {
-      addError([LError]);
-    }
+    addError([LError]);
   }, [LError]);
 
   useEffect(() => {
-    if (RError) {
-      addError([RError]);
-    }
+    addError([RError]);
   }, [RError]);
 
   return [authFn] as const;
