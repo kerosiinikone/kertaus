@@ -85,6 +85,10 @@ const scheduleRequestMutation = gql`
 `;
 
 export default function AILandingPage() {
+  if (!process.env.BASE_URL) {
+    return null;
+  }
+
   const [
     requestSchedule,
     { loading: loadingSchedule, data: scheduleData, error: scheduleError },
