@@ -85,10 +85,6 @@ const scheduleRequestMutation = gql`
 `;
 
 export default function AILandingPage() {
-  if (!process.env.BASE_URL) {
-    return null;
-  }
-
   const [
     requestSchedule,
     { loading: loadingSchedule, data: scheduleData, error: scheduleError },
@@ -119,7 +115,7 @@ export default function AILandingPage() {
     if (scheduleError) {
       addError([scheduleError]);
     }
-  }, [scheduleError]);
+  }, [scheduleError, addError]);
 
   return (
     <>
