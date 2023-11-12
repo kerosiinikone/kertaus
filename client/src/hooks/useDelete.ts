@@ -1,8 +1,4 @@
-import {
-  DEFAULT_SCHEDULE_AMOUNT,
-  FetchQueryVars,
-  ScheduleQueryResponse,
-} from "@/app/me/page";
+import { FetchQueryVars, ScheduleQueryResponse } from "@/app/me/page";
 import { LazyQueryExecFunction, gql, useMutation } from "@apollo/client";
 import { useEffect } from "react";
 
@@ -13,6 +9,8 @@ const deleteScheduleMutation = gql`
     }
   }
 `;
+
+const DEFAULT_SCHEDULE_AMOUNT = 5;
 
 interface DeleteScheduleResponse {
   deleteSchedule: {

@@ -98,21 +98,21 @@ export default function AILandingPage() {
   const { globalError, addError } = useGlobalErrorContext();
 
   const MOCKUP_SUBMIT = (input: Input) => {
+    let traversionResult: any;
     try {
-      const traversionResult = getValidatedInput(input);
-
-      const promptInput: PromptInput = {
-        ...input,
-        courses: traversionResult.result.courses,
-        subjectType: traversionResult.result.subjectType as CodeType,
-        subject: traversionResult.result.subject ?? input.subject,
-      };
-
-      requestSchedule({ variables: { ...promptInput } });
+      traversionResult = getValidatedInput(input);
     } catch (error) {
       const e = new Error(BAD_INPUT);
       addError([e]);
     }
+    const promptInput: PromptInput = {
+      ...input,
+      courses: traversionResult.result.courses,
+      subjectType: traversionResult.result.subjectType as CodeType,
+      subject: traversionResult.result.subject ?? input.subject,
+    };
+
+    requestSchedule({ variables: { ...promptInput } });
   };
 
   useEffect(() => {
