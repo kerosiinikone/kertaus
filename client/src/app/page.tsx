@@ -7,7 +7,7 @@ import {
   Periods,
   PromptInput,
 } from "../../../shared/index";
-import { ApolloError, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { BAD_INPUT, getValidatedInput } from "@/lib/util/validator";
 import { createPortal } from "react-dom";
 import ModalLoader from "@/components/ModalLoader";
@@ -94,32 +94,28 @@ export default function AILandingPage() {
   const { globalError, addError } = useGlobalErrorContext();
 
   const MOCKUP_SUBMIT = (input: Input) => {
-    let traversionResult: any;
     try {
-      traversionResult = getValidatedInput(input);
+      const traversionResult = getValidatedInput(input);
+
+      const promptInput: PromptInput = {
+        ...input,
+        courses: traversionResult.result.courses,
+        subjectType: traversionResult.result.subjectType as CodeType,
+        subject: traversionResult.result.subject ?? input.subject,
+      };
+
+      requestSchedule({ variables: { ...promptInput } });
     } catch (error) {
       const e = new Error(BAD_INPUT);
       addError([e]);
     }
-    const promptInput: PromptInput = {
-      ...input,
-      courses: traversionResult.result.courses,
-      subjectType: traversionResult.result.subjectType as CodeType,
-      subject: traversionResult.result.subject ?? input.subject,
-    };
-
-    requestSchedule({ variables: { ...promptInput } });
   };
 
   useEffect(() => {
     if (scheduleError) {
-      markErr(scheduleError);
+      addError([scheduleError]);
     }
   }, [scheduleError]);
-
-  const markErr = (e: ApolloError | undefined) => {
-    addError([e]);
-  };
 
   return (
     <>
