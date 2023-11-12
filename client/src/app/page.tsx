@@ -7,13 +7,13 @@ import {
   Periods,
   PromptInput,
 } from "../../../shared/index";
-import { ApolloError, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { BAD_INPUT, getValidatedInput } from "@/lib/util/validator";
 import { createPortal } from "react-dom";
 import ModalLoader from "@/components/ModalLoader";
 import ScheduleWrapper from "@/components/ScheduleWrapper";
 import ErrorMsg from "@/components/error/ErrorMsg";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGlobalErrorContext } from "@/context/Error/state";
 
 export interface Subject {

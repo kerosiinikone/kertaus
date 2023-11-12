@@ -21,7 +21,7 @@ import { useUserContext } from "@/context/User/state";
 import ErrorMsg from "@/components/error/ErrorMsg";
 import { useGlobalErrorContext } from "@/context/Error/state";
 
-export const DEFAULT_SCHEDULE_AMOUNT = 5;
+const DEFAULT_SCHEDULE_AMOUNT = 5;
 
 const meQuery = gql`
   query {
