@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import { getUserByParam } from "../lib/database/userOperations.ts";
-import { VerifiedRefreshToken, Cookie } from "../lib/util/cookies.ts";
+import { getUserByParam } from "../lib/database/userOperations.js";
+import { VerifiedRefreshToken, Cookie } from "../lib/util/cookies.js";
 
 export const refreshRouter = express.Router();
 

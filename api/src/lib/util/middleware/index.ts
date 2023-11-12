@@ -1,8 +1,8 @@
 import { MiddlewareFn } from "type-graphql";
-import { Cookie } from "../cookies.ts";
-import { ContextType } from "../../../../../shared/index.ts";
+import { Cookie } from "../cookies.js";
+import { ContextType } from "../../../../../shared/index.js";
 import { Request } from "express";
-import { ScheduleModel } from "../../database/scheduleOperations.ts";
+import { ScheduleModel } from "../../database/scheduleOperations.js";
 import lops2019 from "../../../../../lops2019.js";
 
 const BAD_INPUT = "Bad Input Error";

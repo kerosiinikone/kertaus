@@ -11,16 +11,16 @@ import {
   CodeType,
   type ContextType,
   type ScheduleSchema,
-} from "../../../../shared/index.ts";
-import { ScheduleModel } from "../../lib/database/scheduleOperations.ts";
-import { requestSchedule } from "../../lib/openai/completions.ts";
+} from "../../../../shared/index.js";
+import { ScheduleModel } from "../../lib/database/scheduleOperations.js";
+import { requestSchedule } from "../../lib/openai/completions.js";
 import {
   authenticationMiddleWare,
   authorizeMiddleware,
   getUserMiddleware,
   typeCheckMiddleware,
-} from "../../lib/util/middleware/index.ts";
-import { Schedule, ScheduleInput, ScheduleQueryParams } from "./type.ts";
+} from "../../lib/util/middleware/index.js";
+import { Schedule, ScheduleInput, ScheduleQueryParams } from "./type.js";
 
 @Resolver(Schedule)
 export class ScheduleResolver {

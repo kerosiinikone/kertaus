@@ -2,18 +2,19 @@
   "compilerOptions": {
     "rootDirs": ["api"],
     "target": "es2020",
+    "outDir": "./dist",
     "module": "esnext",
     "moduleResolution": "node",
     "types": ["node"],
-    "lib": ["es2018", "es2020", "esnext.asynciterable"],
+    "lib": ["es2018", "es2020", "esnext.asynciterable", "dom"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "allowJs": true,
     "esModuleInterop": true,
-    "paths": {
-      "@shared": ["./shared/"]
-    }
+    "declaration": true
   },
   "ts-node": {
     "esm": true
-  }
+  },
+  "exclude": ["node_modules", "client", "**/*.d.ts", "dist"]
 }

@@ -1,5 +1,6 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginLandingPageDisabled } from "@apollo/server/plugin/disabled";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import pkg from "body-parser";
 import cookieParser from "cookie-parser";
@@ -9,12 +10,12 @@ import express from "express";
 import http from "http";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import { ContextType } from "../shared/index.ts";
-import { startPrisma } from "./db.ts";
-import { ScheduleResolver } from "./src/models/Schedule/resolver.ts";
-import { AuthResolver } from "./src/models/User/auth/authResolver.ts";
-import { UserResolver } from "./src/models/User/userResolver.ts";
-import { refreshRouter } from "./src/routes/refresh.ts";
+import { ContextType } from "../shared/index";
+import { startPrisma } from "./db.js";
+import { ScheduleResolver } from "./src/models/Schedule/resolver.js";
+import { AuthResolver } from "./src/models/User/auth/authResolver.js";
+import { UserResolver } from "./src/models/User/userResolver.js";
+import { refreshRouter } from "./src/routes/refresh.js";
 
 const { json } = pkg;
 dotenv.config();
@@ -69,9 +70,15 @@ const buildApollo = async (
   const schema = await buildSchema({
     resolvers: [UserResolver, AuthResolver, ScheduleResolver],
   });
+
+  const plugins = [ApolloServerPluginDrainHttpServer({ httpServer })];
+
+  if (process.env.ENVIRONMENT == "production") {
+    plugins.push(ApolloServerPluginLandingPageDisabled());
+  }
   return new ApolloServer<ContextType>({
     schema,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    plugins,
   });
 };
 

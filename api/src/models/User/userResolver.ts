@@ -1,9 +1,6 @@
 import { Resolver, Query, UseMiddleware, Ctx } from "type-graphql";
 import { User } from "./type.js";
-import {
-  getAllUsers,
-  getUserByParam,
-} from "../../lib/database/userOperations.js";
+import { getUserByParam } from "../../lib/database/userOperations.js";
 import { getUserMiddleware } from "../../lib/util/middleware/index.js";
 import type { ContextType } from "../../../../shared/index.js";
 

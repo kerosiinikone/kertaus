@@ -1,7 +1,7 @@
 import { ChatCompletionRequestMessage } from "openai";
-import { CodeType, PromptInput } from "../../../../shared/index.ts";
-import { openai } from "./index.ts";
-import { PRE_PROMPT } from "./prompts.ts";
+import { CodeType, PromptInput } from "../../../../shared/index.js";
+import { openai } from "./index.js";
+import { PRE_PROMPT } from "./prompts.js";
 
 const DEFAULT_MODEL = process.env.AI_MODEL || "gpt-4-1106-preview";
 

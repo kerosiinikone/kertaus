@@ -1,4 +1,4 @@
-import { user } from "../../../db.ts";
+import { user } from "../../../db.js";
 import { Prisma } from "@prisma/client";
 
 export interface FetchOptions {

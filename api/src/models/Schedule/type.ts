@@ -1,7 +1,7 @@
 import { Field, ObjectType, ID, ArgsType } from "type-graphql";
-import { User } from "../User/type.ts";
-import { CodeType, Intensities } from "../../../../shared/index.ts";
-import type { ScheduleSchema } from "../../../../shared/index.ts";
+import { User } from "../User/type.js";
+import { CodeType, Intensities } from "../../../../shared/index.js";
+import type { ScheduleSchema } from "../../../../shared/index.js";
 import { registerEnumType } from "type-graphql";
 
 registerEnumType(Intensities, {

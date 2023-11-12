@@ -1,5 +1,5 @@
 import { Field, ObjectType, ID } from "type-graphql";
-import { Schedule } from "../Schedule/type.ts";
+import { Schedule } from "../Schedule/type.js";
 
 @ObjectType()
 export class User {

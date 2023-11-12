@@ -1,9 +1,9 @@
 import { Prisma } from "@prisma/client";
-import { schedule } from "../../../db.ts";
+import { schedule } from "../../../db.js";
 import {
   ScheduleModelSchema,
   ScheduleSchema,
-} from "../../../../shared/index.ts";
+} from "../../../../shared/index.js";
 
 export interface FetchOptions {
   select?: Prisma.ScheduleSelect;

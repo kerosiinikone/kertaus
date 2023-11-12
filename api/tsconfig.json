@@ -1,8 +1,13 @@
 {
   "extends": "../tsconfig.json",
-  "references": [{ "path": "../shared" }],
   "compilerOptions": {
-    "noEmit": true,
-    "allowImportingTsExtensions": true
-  }
+    "rootDirs": ["./"],
+    "outDir": "../dist",
+    "declaration": true,
+    "paths": {
+      "@shared": ["./shared/"]
+    },
+    "lib": ["dom"]
+  },
+  "references": [{ "path": "../shared" }]
 }
