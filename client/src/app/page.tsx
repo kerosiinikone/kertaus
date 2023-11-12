@@ -7,7 +7,7 @@ import {
   Periods,
   PromptInput,
 } from "../../../shared/index";
-import { gql, useMutation } from "@apollo/client";
+import { ApolloError, gql, useMutation } from "@apollo/client";
 import { BAD_INPUT, getValidatedInput } from "@/lib/util/validator";
 import { createPortal } from "react-dom";
 import ModalLoader from "@/components/ModalLoader";
@@ -113,9 +113,13 @@ export default function AILandingPage() {
 
   useEffect(() => {
     if (scheduleError) {
-      addError([scheduleError]);
+      markErr(scheduleError);
     }
-  }, [scheduleError, addError]);
+  }, [scheduleError]);
+
+  const markErr = (e: ApolloError | undefined) => {
+    addError([e]);
+  };
 
   return (
     <>
