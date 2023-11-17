@@ -100,9 +100,9 @@ export default function UserPage() {
   });
 
   const logout = () => {
+    setUser(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    setUser(null);
     logoutMutation();
   };
 
@@ -135,6 +135,8 @@ export default function UserPage() {
     }
   }, [schedulesData]);
 
+  // Cookie issues -> check the order of requests
+
   useEffect(() => {
     if (!data?.me) {
       refresh();
@@ -147,7 +149,7 @@ export default function UserPage() {
       });
       setUser(data.me);
     }
-  }, [data, router]);
+  }, [data]);
 
   // Refactor and abstract
 

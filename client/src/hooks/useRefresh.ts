@@ -11,13 +11,18 @@ interface useRefreshArgs {
 const useRefresh = ({ refetch, logout, router }: useRefreshArgs) => {
   const refresh = () => {
     try {
-      fetch(`${process.env.SERVER_URL!}/refresh`, { credentials: "include" })
+      fetch(`${process.env.SERVER_URL!}/refresh`, {
+        credentials: "include",
+        cache: "no-cache",
+      })
         .then(() => {
-          refetch().then(({ data }) => {
-            if (!data.me) {
-              router.push("/auth");
-            }
-          });
+          setTimeout(() => {
+            refetch().then(({ data }) => {
+              if (!data.me) {
+                router.push("/auth");
+              }
+            });
+          }, 500);
         })
         .catch(() => {
           router.push("/auth");
