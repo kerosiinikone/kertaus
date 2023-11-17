@@ -4,8 +4,8 @@ const nextConfig = {
     externalDir: true,
   },
   env: {
-    BASE_URL: process.env.CLIENT_URL,
-    SERVER_URL: process.env.BASE_URL,
+    BASE_URL: process.env.BASE_URL,
+    SERVER_URL: process.env.SERVER_URL,
     ENVIRONMENT: process.env.ENVIRONMENT,
   },
   generateEtags: false,

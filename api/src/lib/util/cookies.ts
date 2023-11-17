@@ -34,7 +34,7 @@ export class Cookie implements CookieGen {
   private refreshToken: string;
   private user: User;
   private defaultOptions: CookieOptions = {
-    sameSite: "none",
+    sameSite: "strict",
     httpOnly: true ? process.env.ENVIRONMENT == "DEVELOPMENT" : false,
     secure: true,
   };
