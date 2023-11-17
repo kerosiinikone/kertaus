@@ -100,6 +100,8 @@ export default function UserPage() {
   });
 
   const logout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     setUser(null);
     logoutMutation();
   };
