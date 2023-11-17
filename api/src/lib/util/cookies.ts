@@ -35,7 +35,7 @@ export class Cookie implements CookieGen {
   private user: User;
   private defaultOptions: CookieOptions = {
     sameSite: "none",
-    httpOnly: true,
+    httpOnly: true ? process.env.ENVIRONMENT == "DEVELOPMENT" : false,
     secure: true,
   };
 
@@ -88,10 +88,12 @@ export class Cookie implements CookieGen {
     res.cookie("accessToken", this.accessToken, {
       ...this.defaultOptions,
       maxAge: 1000 * 60 * 15,
+      sameSite: "none",
     });
     res.cookie("refreshToken", this.refreshToken, {
       ...this.defaultOptions,
       maxAge: 1000 * 60 * 60 * 24 * 7,
+      sameSite: "none",
     });
   }
 
