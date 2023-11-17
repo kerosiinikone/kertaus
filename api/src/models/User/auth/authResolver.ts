@@ -68,8 +68,8 @@ export class AuthResolver {
   @UseMiddleware(authenticationMiddleWare)
   logout(@Ctx() { res }: ContextType): { success: boolean } {
     try {
-      res.clearCookie("accessToken");
-      res.clearCookie("refreshToken");
+      Cookie.clearCookie("accessToken", res);
+      Cookie.clearCookie("refreshToken", res);
       return {
         success: true,
       };

@@ -34,8 +34,9 @@ export class Cookie implements CookieGen {
   private refreshToken: string;
   private user: User;
   private defaultOptions: CookieOptions = {
-    sameSite: "strict",
-    httpOnly: true ? process.env.ENVIRONMENT == "DEVELOPMENT" : false,
+    sameSite: "none",
+    httpOnly: true,
+    domain: ".onrender.com" ? process.env.ON_RENDER : null,
     secure: true,
   };
 
@@ -62,6 +63,13 @@ export class Cookie implements CookieGen {
 
   signRefreshToken(payload: RefreshTokenPayload) {
     return jwt.sign(payload, process.env.SECRET_TOKEN, { expiresIn: "7d" });
+  }
+
+  static clearCookie(cookie: string, res: Response) {
+    res.cookie(cookie, "", {
+      expires: new Date(0),
+      domain: ".onrender.com",
+    });
   }
 
   static verifyRefreshToken(token: string) {
