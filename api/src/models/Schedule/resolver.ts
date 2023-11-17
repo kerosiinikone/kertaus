@@ -15,13 +15,12 @@ import {
   authenticationMiddleWare,
   authorizeMiddleware,
   getUserMiddleware,
-  typeCheckMiddleware,
 } from "../../lib/util/middleware/index.js";
 import { Schedule, ScheduleInput, ScheduleQueryParams } from "./type.js";
 
 @Resolver(Schedule)
 export class ScheduleResolver {
-  @UseMiddleware(getUserMiddleware, typeCheckMiddleware)
+  @UseMiddleware(getUserMiddleware)
   @Mutation(() => Schedule)
   async createSchedule(
     @Args()

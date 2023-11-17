@@ -34,24 +34,25 @@ export const authorizeMiddleware: MiddlewareFn<ContextType> = async (
   return next();
 };
 
-export const typeCheckMiddleware: MiddlewareFn<ContextType> = async (
-  { args },
-  next
-) => {
-  const { subject } = args;
-  if (typeof subject != "string") throw new Error(BAD_INPUT);
+// export const typeCheckMiddleware: MiddlewareFn<ContextType> = async (
+//   { args },
+//   next
+// ) => {
+//   const { subject } = args;
 
-  const s = subject.toLowerCase();
+//   if (typeof subject != "string") throw new Error(BAD_INPUT);
 
-  if (
-    !lops2019.codes.includes(s) &&
-    !lops2019.subjects.includes(s) &&
-    !lops2019.courseNames.includes(s)
-  )
-    throw new Error(BAD_INPUT);
+//   const s = subject.toLowerCase();
 
-  return next();
-};
+//   if (
+//     !lops2019.codes.includes(s) &&
+//     !lops2019.subjects.includes(s) &&
+//     !lops2019.courseNames.includes(s)
+//   )
+//     throw new Error(BAD_INPUT);
+
+//   return next();
+// };
 
 export const getUserMiddleware: MiddlewareFn<ContextType> = async (
   { context },

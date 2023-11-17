@@ -28,13 +28,16 @@ export class AuthResolver {
       const hashedPassword = await hashPassword(password);
 
       const newUser = await createUser({ email, password: hashedPassword });
+
       const cookie = new Cookie(newUser);
 
       cookie.buildTokens();
       cookie.setCookies(res);
 
       return newUser;
-    } catch (error) {}
+    } catch (error) {
+      throw new Error("Something went wrong!");
+    }
   }
 
   @Mutation(() => User)
