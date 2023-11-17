@@ -101,8 +101,6 @@ export default function UserPage() {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
     logoutMutation();
   };
 
