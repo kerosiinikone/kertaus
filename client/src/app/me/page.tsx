@@ -43,12 +43,20 @@ const userSchedulesQuery = gql`
 
 const logoutQuery = gql`
   mutation {
-    logout
+    logout {
+      success
+    }
   }
 `;
 
 export interface ScheduleQueryResponse {
   schedules: ScheduleModelSchema[];
+}
+
+export interface LogoutResponse {
+  logout: {
+    success: boolean;
+  };
 }
 
 export interface FetchQueryVars {
@@ -83,7 +91,8 @@ export default function UserPage() {
   } = useQuery<UserQueryResponse>(meQuery, {
     fetchPolicy: "no-cache",
   });
-  const [logoutMutation, { error: logoutError }] = useMutation(logoutQuery);
+  const [logoutMutation, { data: logoutData, error: logoutError }] =
+    useMutation<LogoutResponse>(logoutQuery);
 
   const [deleteSchedule] = useDelete({
     fetchSchedules,
@@ -93,7 +102,6 @@ export default function UserPage() {
   const logout = () => {
     setUser(null);
     logoutMutation();
-    router.push("/auth");
   };
 
   const [refresh] = useRefresh({
@@ -148,6 +156,12 @@ export default function UserPage() {
     if (userError) errorStack.push(userError);
     addError(errorStack);
   }, [logoutError, scheduleError, userError]);
+
+  useEffect(() => {
+    if (logoutData?.logout.success) {
+      router.push("/auth");
+    }
+  }, [logoutData]);
 
   return (
     <>

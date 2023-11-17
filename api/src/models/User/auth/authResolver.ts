@@ -66,9 +66,17 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(authenticationMiddleWare)
-  logout(@Ctx() { res }: ContextType): boolean {
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
-    return true;
+  logout(@Ctx() { res }: ContextType): { success: boolean } {
+    try {
+      res.clearCookie("accessToken");
+      res.clearCookie("refreshToken");
+      return {
+        success: true,
+      };
+    } catch (error) {
+      return {
+        success: false,
+      };
+    }
   }
 }
