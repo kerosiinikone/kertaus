@@ -3,11 +3,10 @@ const nextConfig = {
   experimental: {
     externalDir: true,
   },
-  swcMinify: false,
   env: {
-    CLIENT_URL: process.env.CLIENT_URL,
+    BASE_URL: process.env.CLIENT_URL,
     SERVER_URL: process.env.SERVER_URL,
-    ENVINROMENT: process.env.ENVINROMENT,
+    ENVIRONMENT: process.env.ENVINROMENT,
   },
   generateEtags: false,
 };

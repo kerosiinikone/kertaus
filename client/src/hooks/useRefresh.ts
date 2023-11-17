@@ -1,11 +1,10 @@
 import { UserQueryResponse } from "@/app/me/page";
 import { ApolloQueryResult } from "@apollo/client";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
 interface useRefreshArgs {
   refetch: () => Promise<ApolloQueryResult<UserQueryResponse>>;
   logout: () => void;
-  router: AppRouterInstance;
+  router: any;
 }
 
 const useRefresh = ({ refetch, logout, router }: useRefreshArgs) => {
