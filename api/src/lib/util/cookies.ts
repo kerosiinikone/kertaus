@@ -36,7 +36,6 @@ export class Cookie implements CookieGen {
   private defaultOptions: CookieOptions = {
     sameSite: "none",
     httpOnly: true,
-    domain: ".onrender.com" ? process.env.ON_RENDER : null,
     secure: true,
   };
 
@@ -68,7 +67,6 @@ export class Cookie implements CookieGen {
   static clearCookie(cookie: string, res: Response) {
     res.cookie(cookie, "", {
       expires: new Date(0),
-      domain: ".onrender.com",
     });
   }
 
