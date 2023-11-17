@@ -45,12 +45,20 @@ export class ScheduleResolver {
       courses,
     });
 
+    if (process.env.ENVIRONMENT == "DEVELOPMENT") {
+      console.log(content);
+    }
+
     const schedule = new ScheduleModel(
       content,
       name ??
         (subjectType === CodeType.COURSE ? subject.split(": ")[1] : subject),
       res.locals.user ?? null
     );
+
+    if (process.env.ENVIRONMENT == "DEVELOPMENT") {
+      console.log(schedule);
+    }
 
     if (res.locals.user) {
       await schedule.save();
