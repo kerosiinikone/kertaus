@@ -8,6 +8,7 @@ const nextConfig = {
     SERVER_URL: process.env.SERVER_URL,
     ENVINROMENT: process.env.ENVINROMENT,
   },
+  generateEtags: false,
 };
 
 module.exports = nextConfig;
