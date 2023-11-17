@@ -1,8 +1,9 @@
 "use client";
 
-import { ApolloClient, ApolloLink, HttpLink } from "@apollo/client";
+import { ApolloLink, HttpLink } from "@apollo/client";
 import {
   ApolloNextAppProvider,
+  NextSSRApolloClient,
   NextSSRInMemoryCache,
   SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
@@ -13,7 +14,7 @@ function makeClient() {
     uri: `${process.env.SERVER_URL}/graphql`,
   });
 
-  return new ApolloClient({
+  return new NextSSRApolloClient({
     cache: new NextSSRInMemoryCache(),
     credentials: "include",
     link:

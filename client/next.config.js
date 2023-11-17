@@ -5,8 +5,8 @@ const nextConfig = {
   },
   env: {
     BASE_URL: process.env.CLIENT_URL,
-    SERVER_URL: process.env.SERVER_URL,
-    ENVIRONMENT: process.env.ENVINROMENT,
+    SERVER_URL: process.env.BASE_URL,
+    ENVIRONMENT: process.env.ENVIRONMENT,
   },
   generateEtags: false,
 };
