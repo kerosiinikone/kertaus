@@ -18,3 +18,9 @@ export class User {
   @Field((type) => [Schedule], { nullable: true })
   schedules?: Promise<Schedule[]>;
 }
+
+@ObjectType()
+export class LogoutType {
+  @Field()
+  success: boolean;
+}

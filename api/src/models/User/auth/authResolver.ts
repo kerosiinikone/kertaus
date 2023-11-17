@@ -8,7 +8,7 @@ import {
 import { authenticationMiddleWare } from "../../../lib/util/middleware/index.js";
 import { Cookie } from "../../../lib/util/cookies.js";
 import { comparePasswords, hashPassword } from "../../../lib/util/crypt.js";
-import { User } from "../type.js";
+import { User, LogoutType } from "../type.js";
 import { AuthInput } from "./type.js";
 
 @Resolver(User)
@@ -64,7 +64,7 @@ export class AuthResolver {
     }
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => LogoutType)
   @UseMiddleware(authenticationMiddleWare)
   logout(@Ctx() { res }: ContextType): { success: boolean } {
     try {
