@@ -35,7 +35,7 @@ export class Cookie implements CookieGen {
   private user: User;
   private defaultOptions: CookieOptions = {
     sameSite: "none",
-    httpOnly: true,
+    domain: ".onrender.com",
     secure: true,
   };
 
