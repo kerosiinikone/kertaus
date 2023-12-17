@@ -1,18 +1,8 @@
 "use client";
 
-import {
-  Dispatch,
-  SetStateAction,
-  createContext,
-  useContext,
-  useState,
-} from "react";
+import { createContext, useContext, useState } from "react";
 import { User } from "../../../../shared";
-
-export interface UserContextType {
-  user: User | null;
-  setUser: Dispatch<SetStateAction<User | null>>;
-}
+import { UserContextType } from "./types";
 
 const initialState: UserContextType = {
   user: null,

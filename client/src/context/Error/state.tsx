@@ -8,14 +8,7 @@ import {
   useContext,
   useState,
 } from "react";
-
-export interface GlobalErrorContextType {
-  globalError: Array<ApolloError | undefined | Error>;
-  setGlobalError: Dispatch<
-    SetStateAction<Array<ApolloError | undefined | Error>>
-  >;
-  addError: (error: Array<ApolloError | undefined | Error>) => void;
-}
+import { GlobalErrorContextType } from "./types";
 
 const initialState: GlobalErrorContextType = {
   globalError: [],

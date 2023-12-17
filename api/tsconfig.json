@@ -2,13 +2,22 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "rootDirs": ["./"],
-    "outDir": "../dist",
-    "module": "ESNext",
-    "declaration": true,
     "paths": {
       "@shared": ["./shared/"]
     },
-    "lib": ["dom"]
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "types": ["node"],
+    "lib": ["es2018", "es2020", "esnext.asynciterable", "dom"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "declaration": true
+  },
+  "ts-node": {
+    "esm": true
   },
   "references": [{ "path": "../shared" }]
 }

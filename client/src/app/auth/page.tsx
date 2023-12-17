@@ -1,8 +1,8 @@
 "use client";
 
-import LoginForm from "@/components/LoginForm";
-import RegisterForm from "@/components/RegisterForm";
-import ErrorMsg from "@/components/error/ErrorMsg";
+import LoginForm from "@/app/auth/_components/LoginForm";
+import RegisterForm from "@/app/auth/_components/RegisterForm";
+import ErrorMsg from "@/components/ui/ErrorMsg";
 import { useGlobalErrorContext } from "@/context/Error/state";
 import useAuth from "@/hooks/useAuth";
 import { useState } from "react";

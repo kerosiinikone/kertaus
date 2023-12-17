@@ -1,55 +1,43 @@
-import { ChatCompletionRequestMessage } from "openai";
-import { CodeType, PromptInput } from "../../../../shared/index.js";
+import { PromptInput } from "../../../../shared/index.js";
 import { openai } from "./index.js";
+import { generatePrompt, parseRequestJSON } from "./helpers.js";
 import { PRE_PROMPT } from "./prompts.js";
+import OpenAI from "openai";
+import { ChatCompletionCreateParams } from "openai/src/resources/chat/completions.js";
 
-const DEFAULT_MODEL = process.env.AI_MODEL || "gpt-4-1106-preview";
+export const RES_TYPE: ChatCompletionCreateParams.ResponseFormat = {
+  type: "json_object",
+};
+export const DEFAULT_MODEL = process.env.AI_MODEL || "gpt-4-1106-preview";
+
+let RETRY_COUNT = 0;
+const MAX_RETRY_COUNT = 2;
 
 export const requestSchedule = async (input: PromptInput) => {
-  const initialPrompt: ChatCompletionRequestMessage[] = [
-    { role: "system", content: PRE_PROMPT },
-    { role: "user", content: generatePrompt(input) },
-  ];
-
-  const options = {
+  const params: OpenAI.Chat.ChatCompletionCreateParams = {
+    messages: [
+      { role: "system", content: PRE_PROMPT, name: "setup" },
+      { role: "user", content: generatePrompt(input), name: "schedule" },
+    ],
     model: DEFAULT_MODEL,
-    messages: initialPrompt,
-    response_format: { type: "json_object" },
+    response_format: RES_TYPE,
     temperature: 0.7,
     max_tokens: 2048,
     top_p: 1,
-    presence_penalty: 0,
-    frequency_penalty: 0,
   };
 
   try {
-    const response = await openai.createChatCompletion(options);
-    return JSON.parse(response.data.choices[0].message.content);
+    const completeData = await openai.chat.completions.create(params);
+    const final = completeData.choices[0].message.content;
+    const jsonResponse = parseRequestJSON(final, input);
+
+    return jsonResponse;
   } catch (error) {
-    throw error;
+    if (RETRY_COUNT < MAX_RETRY_COUNT) {
+      RETRY_COUNT++;
+      return requestSchedule(input);
+    } else {
+      console.error("Maximum retry count reached. Unable to complete request.");
+    }
   }
-};
-
-const generatePrompt = (input: PromptInput) => {
-  let prompt: Array<string> = [];
-
-  switch (input.subjectType) {
-    case CodeType.SUBJECT:
-      let topics = input.courses.join(", ");
-      prompt.push(`Aiheet: ${topics}.`);
-      break;
-    case CodeType.COURSE:
-      prompt.push(`Aihe: ${input.subject.toLowerCase()}.`);
-      break;
-  }
-
-  prompt.push(`Aikataulun pituus: ${input.timePeriod.toLowerCase()}.`);
-
-  prompt.push(
-    `Suhteellinen tehtävien määrä: ${input.intensity.toLowerCase()}.`
-  );
-
-  if (process.env.ENVIRONMENT === "DEVELOPMENT") console.log(prompt.join(" "));
-
-  return prompt.join(" ");
 };

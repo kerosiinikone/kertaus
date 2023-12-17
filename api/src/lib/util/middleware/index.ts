@@ -1,11 +1,8 @@
 import { MiddlewareFn } from "type-graphql";
 import { Cookie } from "../cookies.js";
-import type { ContextType } from "../../../types";
+import type { ContextType } from "../../../types/index.js";
 import { Request } from "express";
 import { ScheduleModel } from "../../database/scheduleOperations.js";
-import lops2019 from "../../../../../lops2019.js";
-
-const BAD_INPUT = "Bad Input Error";
 
 export const authenticationMiddleWare: MiddlewareFn<ContextType> = async (
   { context },

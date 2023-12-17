@@ -1,6 +1,6 @@
 "use client";
 
-import AIWrapper from "@/components/AIWrapper";
+import AIWrapper from "@/app/AIWrapper";
 import {
   CodeType,
   Intensities,
@@ -10,9 +10,9 @@ import {
 import { gql, useMutation } from "@apollo/client";
 import { BAD_INPUT, getValidatedInput } from "@/lib/util/validator";
 import { createPortal } from "react-dom";
-import ModalLoader from "@/components/ModalLoader";
-import ScheduleWrapper from "@/components/ScheduleWrapper";
-import ErrorMsg from "@/components/error/ErrorMsg";
+import ModalLoader from "@/components/ui/ModalLoader";
+import ScheduleWrapper from "@/app/schedules/_components/ScheduleWrapper";
+import ErrorMsg from "@/components/ui/ErrorMsg";
 import { useEffect } from "react";
 import { useGlobalErrorContext } from "@/context/Error/state";
 

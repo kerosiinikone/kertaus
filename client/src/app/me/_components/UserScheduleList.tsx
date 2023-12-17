@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ScheduleModelSchema } from "../../../shared";
+import { ScheduleModelSchema } from "../../../../../shared";
 import { CiTrash } from "react-icons/ci";
 import { IconContext } from "react-icons";
 

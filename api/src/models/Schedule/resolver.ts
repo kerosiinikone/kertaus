@@ -20,6 +20,17 @@ import { Schedule, ScheduleInput, ScheduleQueryParams } from "./type.js";
 
 @Resolver(Schedule)
 export class ScheduleResolver {
+  private constructScheduleName(
+    subject: string,
+    subjectType: CodeType,
+    name: string | undefined
+  ): string {
+    return (
+      name ??
+      (subjectType === CodeType.COURSE ? subject.split(": ")[1] : subject)
+    );
+  }
+
   @UseMiddleware(getUserMiddleware)
   @Mutation(() => Schedule)
   async createSchedule(
@@ -45,20 +56,12 @@ export class ScheduleResolver {
       courses,
     });
 
-    if (process.env.ENVIRONMENT == "DEVELOPMENT") {
-      console.log(content);
-    }
-
+    const scheduleName = this.constructScheduleName(subject, subjectType, name);
     const schedule = new ScheduleModel(
       content,
-      name ??
-        (subjectType === CodeType.COURSE ? subject.split(": ")[1] : subject),
-      res.locals.user ?? null
+      scheduleName,
+      res.locals.user || null
     );
-
-    if (process.env.ENVIRONMENT == "DEVELOPMENT") {
-      console.log(schedule);
-    }
 
     if (res.locals.user) {
       await schedule.save();
@@ -81,7 +84,11 @@ export class ScheduleResolver {
   @UseMiddleware(getUserMiddleware, authorizeMiddleware)
   @Query(() => Schedule)
   async schedule(@Arg("sid") sid: string) {
-    return await ScheduleModel.getScheduleById(sid);
+    try {
+      return await ScheduleModel.getScheduleById(sid);
+    } catch (e) {
+      throw new Error("Not found");
+    }
   }
 
   @UseMiddleware(authenticationMiddleWare)
@@ -90,12 +97,17 @@ export class ScheduleResolver {
     @Args() { take, offset }: ScheduleQueryParams,
     @Ctx() { res }: ContextType
   ) {
-    return await ScheduleModel.getAllSchedules({
-      take,
-      skip: offset,
-      where: {
-        authorId: res.locals.user,
-      },
-    });
+    try {
+      const schedules = await ScheduleModel.getAllSchedules({
+        take,
+        skip: offset,
+        where: {
+          authorId: res.locals.user,
+        },
+      });
+      return schedules;
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 }

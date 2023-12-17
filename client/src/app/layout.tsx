@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import Header from "@/components/Header";
+import Header from "@/components/ui/Header";
 import { ApolloWrapper } from "@/lib/apollo-wrapper";
 import { UserContextProvider } from "@/context/User/state";
 import { GlobalErrorContextProvider } from "@/context/Error/state";

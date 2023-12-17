@@ -5,21 +5,21 @@ import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export interface RegisterResponse {
+interface RegisterResponse {
   register: {
     id?: string;
     email?: string;
   };
 }
 
-export interface LoginResponse {
+interface LoginResponse {
   login: {
     id?: string;
     email?: string;
   };
 }
 
-export const loginQuery = gql`
+const loginQuery = gql`
   mutation ($input: AuthInput!) {
     login(input: $input) {
       id
@@ -28,7 +28,7 @@ export const loginQuery = gql`
   }
 `;
 
-export const registerQuery = gql`
+const registerQuery = gql`
   mutation ($input: AuthInput!) {
     register(input: $input) {
       id

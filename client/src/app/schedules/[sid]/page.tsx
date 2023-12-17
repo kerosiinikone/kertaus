@@ -1,9 +1,9 @@
 "use client";
 
-import ScheduleWrapper from "@/components/ScheduleWrapper";
+import ScheduleWrapper from "@/app/schedules/_components/ScheduleWrapper";
 import { gql, useQuery } from "@apollo/client";
 import { ScheduleSchema } from "../../../../../shared";
-import LoadingComponent from "@/components/LoadingComponent";
+import LoadingComponent from "@/components/ui/LoadingComponent";
 
 interface SingleScheduleResponse {
   schedule: {

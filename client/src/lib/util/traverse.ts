@@ -1,5 +1,5 @@
 import { CodeType } from "../../../../shared";
-import lops2019 from "../../../../lops2019";
+import lops2019 from "../../../../data/lops2019";
 
 interface CodesWithCourse {
   subject?: string;

@@ -1,7 +1,7 @@
 "use client";
 
-import User from "@/components/User";
-import UserScheduleList from "@/components/UserScheduleList";
+import User from "@/app/me/_components/User";
+import UserScheduleList from "@/app/me/_components/UserScheduleList";
 import {
   ApolloError,
   gql,
@@ -13,13 +13,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ScheduleModelSchema } from "../../../../shared";
 import useRefresh from "@/hooks/useRefresh";
-import LoadingComponent from "@/components/LoadingComponent";
+import LoadingComponent from "@/components/ui/LoadingComponent";
 import { createPortal } from "react-dom";
-import DeleteModal from "@/components/DeleteModal";
 import useDelete from "@/hooks/useDelete";
 import { useUserContext } from "@/context/User/state";
-import ErrorMsg from "@/components/error/ErrorMsg";
+import ErrorMsg from "@/components/ui/ErrorMsg";
 import { useGlobalErrorContext } from "@/context/Error/state";
+import DeleteModal from "@/components/ui/DeleteModal";
 
 const DEFAULT_SCHEDULE_AMOUNT = 5;
 

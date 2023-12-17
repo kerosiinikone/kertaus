@@ -1,6 +1,6 @@
 "use client";
 
-import { Subject } from "../app/page";
+import { Subject } from "./page";
 import { useState } from "react";
 import { Periods } from "../../../shared/index";
 
