@@ -36,7 +36,7 @@ const REVISION_PERIOD: Periods[] = [
   Periods.TWOWEEKS,
 ];
 
-export interface ScheduleMutation {
+interface ScheduleMutation {
   createSchedule: {
     name: string;
     content: {

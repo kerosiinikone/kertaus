@@ -1,14 +1,16 @@
 # ChatGPT kertausaikataulut
 
-Lukion aiheet
+> Hyödyntää ChatGPT:tä kertausaikataulujen tuottamiseen lukion aihealueista
 
-Server
+## Dev Environment
+
+### Server
 
 ```bash
 npm run start
 ```
 
-Client
+### Client
 
 ```bash
 cd .\client\
