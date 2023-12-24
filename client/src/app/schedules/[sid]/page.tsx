@@ -1,39 +1,12 @@
 "use client";
 
 import ScheduleWrapper from "@/app/schedules/_components/ScheduleWrapper";
-import { gql, useQuery } from "@apollo/client";
-import { ScheduleSchema } from "../../../../../shared";
 import LoadingComponent from "@/components/ui/LoadingComponent";
-
-interface SingleScheduleResponse {
-  schedule: {
-    name: string;
-    content: ScheduleSchema;
-  };
-}
-
-const scheduleQuery = gql`
-  query ($sid: String!) {
-    schedule(sid: $sid) {
-      name
-      content {
-        aikataulu {
-          aiheet
-          kesto
-          tehtavananto
-          teoriat
-        }
-      }
-    }
-  }
-`;
+import { useFetchSingleSchedule } from "../_hooks/useFetchSingleSchedule";
 
 export default function SchedulePage({ params }: { params: { sid: string } }) {
-  const { data } = useQuery<SingleScheduleResponse>(scheduleQuery, {
-    variables: {
-      sid: params.sid,
-    },
-  });
+  const [data] = useFetchSingleSchedule(params.sid);
+
   return (
     <>
       <div className="flex md:flex-col flex-row items-center">

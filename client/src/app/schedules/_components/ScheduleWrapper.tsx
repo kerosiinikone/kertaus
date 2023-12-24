@@ -18,7 +18,7 @@ interface ScheduleNode {
 }
 
 const ScheduleWrapper: React.FC<ScheduleProps> = ({ content, name }) => {
-  const [scheduleNode, setActiveSchduleNode] = useState<ScheduleNode | null>(
+  const [scheduleNode, setActiveScheduleNode] = useState<ScheduleNode | null>(
     null
   );
   return (
@@ -51,7 +51,7 @@ const ScheduleWrapper: React.FC<ScheduleProps> = ({ content, name }) => {
               {content.map((aihe, i) => (
                 <div
                   key={`${i}-${aihe.aiheet.join("").toLowerCase()}`}
-                  onClick={() => setActiveSchduleNode(aihe)}
+                  onClick={() => setActiveScheduleNode(aihe)}
                   className="flex justify-center shadow-md m-2 items-center text-white min-w-[70px] min-h-[70px] bg-slate-400 rounded-lg
             border-2 border-slate-200 hover:translate-y-1 cursor-pointer hover:bg-slate-300 transition"
                 >

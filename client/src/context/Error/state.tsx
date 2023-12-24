@@ -1,13 +1,7 @@
 "use client";
 
 import { ApolloError } from "@apollo/client";
-import {
-  Dispatch,
-  SetStateAction,
-  createContext,
-  useContext,
-  useState,
-} from "react";
+import { createContext, useContext, useState } from "react";
 import { GlobalErrorContextType } from "./types";
 
 const initialState: GlobalErrorContextType = {

@@ -1,4 +1,4 @@
-import { UserQueryResponse } from "@/app/me/page";
+import { UserQueryResponse } from "@/app/me/_hooks/useUserQuery";
 import { ApolloQueryResult } from "@apollo/client";
 
 interface useRefreshArgs {

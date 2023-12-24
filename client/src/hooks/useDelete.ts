@@ -1,4 +1,7 @@
-import { FetchQueryVars, ScheduleQueryResponse } from "@/app/me/page";
+import {
+  FetchQueryVars,
+  ScheduleQueryResponse,
+} from "@/app/me/_hooks/useFetchSchedules";
 import { LazyQueryExecFunction, gql, useMutation } from "@apollo/client";
 import { useEffect } from "react";
 
