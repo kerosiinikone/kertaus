@@ -1,9 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { schedule } from "../../../db.js";
-import {
-  ScheduleModelSchema,
-  ScheduleSchema,
-} from "../../../../shared/index.js";
+import { ScheduleModelSchema } from "../../../../shared/index.js";
 
 export interface FetchOptions {
   select?: Prisma.ScheduleSelect;
@@ -15,18 +12,18 @@ export interface FetchOptions {
   skip?: number;
 }
 
-export class ScheduleModel implements ScheduleModelSchema {
-  constructor(
-    public content: ScheduleSchema,
-    public name?: string,
-    public authorId?: string
-  ) {}
+export class ScheduleDatabaseModel {
+  private instance: ScheduleModelSchema;
+
+  constructor(scheduleInstance: ScheduleModelSchema) {
+    this.instance = scheduleInstance;
+  }
   async save() {
     return await schedule.create({
       data: {
-        name: this.name,
-        authorId: this.authorId,
-        content: JSON.stringify(this.content),
+        name: this.instance.name,
+        authorId: this.instance.authorId,
+        content: JSON.stringify(this.instance.content),
       },
     });
   }

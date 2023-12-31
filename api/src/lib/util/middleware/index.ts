@@ -2,7 +2,7 @@ import { MiddlewareFn } from "type-graphql";
 import { Cookie } from "../cookies.js";
 import type { ContextType } from "../../../types/index.js";
 import { Request } from "express";
-import { ScheduleModel } from "../../database/scheduleOperations.js";
+import { ScheduleDatabaseModel } from "../../database/scheduleOperations.js";
 
 export const authenticationMiddleWare: MiddlewareFn<ContextType> = async (
   { context },
@@ -25,31 +25,11 @@ export const authorizeMiddleware: MiddlewareFn<ContextType> = async (
   { context, args },
   next
 ) => {
-  const schedule = await ScheduleModel.getScheduleById(args.sid);
+  const schedule = await ScheduleDatabaseModel.getScheduleById(args.sid);
   if (!schedule || schedule.authorId !== context.res.locals.user)
     throw new Error("Not authorized");
   return next();
 };
-
-// export const typeCheckMiddleware: MiddlewareFn<ContextType> = async (
-//   { args },
-//   next
-// ) => {
-//   const { subject } = args;
-
-//   if (typeof subject != "string") throw new Error(BAD_INPUT);
-
-//   const s = subject.toLowerCase();
-
-//   if (
-//     !lops2019.codes.includes(s) &&
-//     !lops2019.subjects.includes(s) &&
-//     !lops2019.courseNames.includes(s)
-//   )
-//     throw new Error(BAD_INPUT);
-
-//   return next();
-// };
 
 export const getUserMiddleware: MiddlewareFn<ContextType> = async (
   { context },
