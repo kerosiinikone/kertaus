@@ -8,7 +8,8 @@ refreshRouter.get("/", async (req: Request, res: Response) => {
   try {
     const refreshToken = req.cookies["refreshToken"];
 
-    let vToken: VerifiedRefreshToken = Cookie.verifyRefreshToken(refreshToken);
+    const vToken: VerifiedRefreshToken =
+      Cookie.verifyRefreshToken(refreshToken);
     const userFound = await getUserByParam({ id: vToken.id });
 
     if (!userFound) throw Error("No auth");

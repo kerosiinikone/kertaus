@@ -45,23 +45,19 @@ export class AuthResolver {
     @Arg("input") { email, password }: AuthInput,
     @Ctx() { res }: ContextType
   ): Promise<User> {
-    try {
-      const user = await getUserByParam({ email });
+    const user = await getUserByParam({ email });
 
-      const cookie = new Cookie(user);
+    const cookie = new Cookie(user);
 
-      if (!user) throw Error("User doesn't exists!");
+    if (!user) throw new Error("User doesn't exists!");
 
-      if (!(await comparePasswords(password, user.password)))
-        throw Error("Wrong credentials!");
+    if (!(await comparePasswords(password, user.password)))
+      throw new Error("Wrong credentials!");
 
-      cookie.buildTokens();
-      cookie.setCookies(res);
+    cookie.buildTokens();
+    cookie.setCookies(res);
 
-      return user;
-    } catch (error) {
-      throw error;
-    }
+    return user;
   }
 
   @Mutation(() => LogoutType)

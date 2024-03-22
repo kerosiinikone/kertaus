@@ -76,7 +76,13 @@ export class Cookie implements CookieGen {
         process.env.SECRET_TOKEN
       ) as VerifiedRefreshToken;
       return payload;
-    } catch (error) {}
+    } catch (error) {
+      if (process.env.ENVIRONMENT !== "production") {
+        console.log(error);
+      } else {
+        throw error;
+      }
+    }
   }
 
   static verifyAccessToken(token: string) {
@@ -86,7 +92,13 @@ export class Cookie implements CookieGen {
         process.env.SECRET_TOKEN
       ) as VerifiedAccessToken;
       return payload;
-    } catch (error) {}
+    } catch (error) {
+      if (process.env.ENVIRONMENT !== "production") {
+        console.log(error);
+      } else {
+        throw error;
+      }
+    }
   }
 
   setCookies(res: Response) {

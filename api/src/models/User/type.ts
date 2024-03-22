@@ -15,7 +15,7 @@ export class User {
   @Field()
   tokenVersion: number;
 
-  @Field((type) => [Schedule], { nullable: true })
+  @Field(() => [Schedule], { nullable: true })
   schedules?: Promise<Schedule[]>;
 }
 

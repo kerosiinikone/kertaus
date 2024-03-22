@@ -76,7 +76,7 @@ const buildApollo = async (
 
   const plugins = [ApolloServerPluginDrainHttpServer({ httpServer })];
 
-  if (process.env.ENVIRONMENT == "production") {
+  if (process.env.ENVIRONMENT === "production") {
     plugins.push(ApolloServerPluginLandingPageDisabled());
   }
 
@@ -89,6 +89,8 @@ const buildApollo = async (
 try {
   await main();
 } catch (error) {
-  console.log(error);
+  if (process.env.ENVIRONMENT !== "production") {
+    console.log(error);
+  }
   process.exit(0);
 }

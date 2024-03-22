@@ -1,5 +1,5 @@
 import { CodeType } from "../../../../shared";
-import lops2019 from "../../../../data/lops2019";
+import lops2019 from "../../../../raw/lops2019";
 
 interface CodesWithCourse {
   subject?: string;
@@ -17,7 +17,7 @@ export type ContainsType = {
 };
 
 export const traverseCourses = (code: string) => {
-  for (let i of lops2019.raw) {
+  for (const i of lops2019.raw) {
     if (i.oppiaine.toLowerCase() === code.toLowerCase()) {
       return i.kurssit.map((c) => c.nimi);
     }
@@ -27,7 +27,7 @@ export const traverseCourses = (code: string) => {
 
 const getCourseNameByCode = (code: string): CodesWithCourse => {
   let courses: CodesWithCourse[] = [];
-  for (let i of lops2019.raw) {
+  for (const i of lops2019.raw) {
     const ICourses: { koodi: string; nimi: string }[] = i.kurssit;
     const codesWithCourseId = ICourses.map((course) => {
       return {
@@ -38,7 +38,7 @@ const getCourseNameByCode = (code: string): CodesWithCourse => {
     courses = courses.concat(codesWithCourseId);
   }
   let foundItem: CodesWithCourse = {};
-  for (let i of courses) {
+  for (const i of courses) {
     if (
       i.course?.koodi.toLowerCase() === code.toLowerCase() ||
       i.course?.nimi.toLowerCase() === code.toLowerCase()

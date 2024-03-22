@@ -59,7 +59,7 @@ export default class ScheduleModel implements ScheduleFlexibleSchema {
     subject: string,
     subjectType: CodeType,
     name: string | undefined
-  ): void {
+  ) {
     this.name = name
       ? name.charAt(0).toUpperCase() + name.slice(1)
       : subjectType === CodeType.COURSE
@@ -70,20 +70,25 @@ export default class ScheduleModel implements ScheduleFlexibleSchema {
   private parseContent() {
     const { aikataulu } = this.content;
 
-    const parsedContent = aikataulu.map(
-      ({ tehtavananto, teoriat, kesto, aiheet }) => {
-        return {
-          aiheet: typeof aiheet == "string" ? aiheet.split(", ") : aiheet,
-          teoriat: typeof teoriat != "string" ? teoriat.join(", ") : teoriat,
-          tehtavananto:
-            typeof tehtavananto == "string"
-              ? parseFloat(tehtavananto)
-              : tehtavananto,
-          kesto: typeof kesto == "string" ? parseFloat(kesto) : kesto,
-        };
-      }
-    );
-    this.content.aikataulu = parsedContent;
+    try {
+      const parsedContent = aikataulu.map(
+        ({ tehtavananto, teoriat, kesto, aiheet }) => {
+          return {
+            aiheet: typeof aiheet == "string" ? aiheet.split(", ") : aiheet,
+            teoriat: typeof teoriat != "string" ? teoriat.join(", ") : teoriat,
+            tehtavananto:
+              typeof tehtavananto == "string"
+                ? parseFloat(tehtavananto)
+                : tehtavananto,
+            kesto: typeof kesto == "string" ? parseFloat(kesto) : kesto,
+          };
+        }
+      );
+      this.content.aikataulu = parsedContent;
+    } catch (error) {
+      console.log(this);
+      throw new Error("Parsing Error, try again");
+    }
   }
 
   private validate() {

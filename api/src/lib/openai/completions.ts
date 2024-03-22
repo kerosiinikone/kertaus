@@ -37,7 +37,7 @@ export const requestSchedule = async (input: PromptInput) => {
       RETRY_COUNT++;
       return requestSchedule(input);
     } else {
-      console.error("Maximum retry count reached. Unable to complete request.");
+      return Promise.reject(new Error("Maximum Retries"));
     }
   }
 };

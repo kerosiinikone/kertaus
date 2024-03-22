@@ -1,4 +1,4 @@
-import { user } from "../../../db.js";
+import { user as User } from "../../../db.js";
 import { Prisma } from "@prisma/client";
 
 export interface FetchOptions {
@@ -23,15 +23,15 @@ interface UserInput {
 }
 
 export const getAllUsers = async (fetchOptions: FetchOptions) => {
-  return await user.findMany(fetchOptions);
+  return await User.findMany(fetchOptions);
 };
 
 export const getUserByParam = async (param: QueryParam) => {
-  return await user.findFirst({
+  return await User.findFirst({
     where: param,
   });
 };
 
 export const createUser = async (userInput: UserInput) => {
-  return await user.create({ data: userInput });
+  return await User.create({ data: userInput });
 };

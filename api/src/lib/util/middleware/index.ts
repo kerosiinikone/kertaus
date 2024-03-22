@@ -41,6 +41,14 @@ export const getUserMiddleware: MiddlewareFn<ContextType> = async (
 };
 
 const getVerifiedToken = (req: Request) => {
-  const token: string = req.cookies["accessToken"];
-  return Cookie.verifyAccessToken(token);
+  try {
+    const token: string = req.cookies["accessToken"];
+    return Cookie.verifyAccessToken(token);
+  } catch (err) {
+    if (process.env.ENVINROMENT !== "PRODUCTION") {
+      console.log(err);
+    } else {
+      throw err;
+    }
+  }
 };

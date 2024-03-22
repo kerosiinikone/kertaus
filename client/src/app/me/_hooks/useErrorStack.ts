@@ -15,7 +15,7 @@ export const useErrorStack = ({
   userError,
 }: ErrorStackParams) => {
   useEffect(() => {
-    let errorStack: Array<ApolloError | undefined> = [];
+    const errorStack: Array<ApolloError | undefined> = [];
     if (logoutError) errorStack.push(logoutError);
     if (scheduleError) errorStack.push(scheduleError);
     if (userError) errorStack.push(userError);

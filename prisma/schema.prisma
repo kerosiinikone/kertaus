@@ -1,5 +1,7 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// The choice of MongoDB for this particular project stems from the 
+// fact that during development I wasn't comfortable enough with 
+// RDBMS as I was with Mongo. Otherwise, something like Postgres or 
+// MySQL would be perfect for this kind of project (maybe migrate in the future) 
 
 generator client {
   provider = "prisma-client-js"
@@ -10,17 +12,17 @@ datasource db {
 }
 
 model User {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
-  email  String @unique
-  password String
-  tokenVersion Int @default(1)
-  schedules Schedule[] 
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  email         String @unique
+  password      String
+  tokenVersion  Int @default(1)
+  schedules     Schedule[] 
 }
 
 model Schedule {
-  id  String   @id @default(auto()) @map("_id") @db.ObjectId
-  name String? 
-  content String
-  author User? @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  String?   @db.ObjectId
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  name      String? 
+  content   String
+  author    User? @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String? @db.ObjectId
 }

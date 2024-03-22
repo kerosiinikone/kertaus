@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 
-export interface ContextType {
+export type ContextType = {
   res: Response;
   req: Request;
-}
+};
 
-export interface LogoutType {
+export type LogoutType = {
   success: boolean;
-}
+};
