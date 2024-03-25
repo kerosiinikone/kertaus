@@ -23,3 +23,5 @@ npm run dev
 
 Documentation
 Comprehensive tests, etc
+Timeouts on API requests
+Persist data on DB while prompt is loading
