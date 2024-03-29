@@ -1,9 +1,9 @@
 import _ from "lodash";
 import { describe, expect, test } from "vitest";
-import lops2019 from "../raw/lops2019";
-import { CodeType, Intensities } from "../shared/index";
-import { generatePrompt } from "../api/src/lib/openai/helpers";
-import { requestSchedule } from "../api/src/lib/openai/completions";
+import lops2019 from "../../raw/lops2019";
+import { CodeType, Intensities } from "../../shared/index";
+import { generatePrompt } from "../../api/src/lib/openai/helpers";
+import { requestSchedule } from "../../api/src/lib/openai/completions";
 
 describe("prompt tests", async () => {
   test("given parameters should form the correct prompt for individual subjects", () => {
