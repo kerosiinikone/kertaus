@@ -8,7 +8,7 @@
     "start": "nodemon api/index.ts",
     "build:prod": "tsc",
     "build:start": "node dist/api/index.js",
-    "test": "vitest",
+    "test": "vitest --config ./vitest.config.ts",
     "lint:all": "eslint . --ext .ts"
   },
   "author": "",

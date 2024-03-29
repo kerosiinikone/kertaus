@@ -21,18 +21,16 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-
       - name: run CI
         run: |
-          npm install # or yarn install
-          npm run test # or yarn test
+          npm install
+          npm run test
   test-client:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      - uses: actions/upload-artifact@v4
         with:
           node-version: lts/*
       - name: Setup and run tests
