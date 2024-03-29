@@ -20,7 +20,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ authFn }) => {
   };
 
   return (
-    <div className="flex flex-col space-y-5 justify-center items-center">
+    <div
+      id="login-container"
+      className="flex flex-col space-y-5 justify-center items-center"
+    >
       <h1 className="text-slate-500 md:text-2xl text-xl mb-2">Kirjaudu</h1>
       <form
         className="flex flex-col space-y-5 justify-center items-center"

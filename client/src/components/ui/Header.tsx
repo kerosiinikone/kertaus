@@ -8,7 +8,10 @@ const Header: React.FC = () => {
   return (
     <div className="flex flex-row items-center justify-between h-20">
       <Link href={"/"} className="m-5">
-        <h1 className="select-none cursor-pointer text-slate-400 text-[25px] hover:text-slate-500 transition">
+        <h1
+          id="header-text"
+          className="select-none cursor-pointer text-slate-400 text-[25px] hover:text-slate-500 transition"
+        >
           kertaus
         </h1>
       </Link>
@@ -19,7 +22,7 @@ const Header: React.FC = () => {
               className: "fill-slate-500 group-hover:fill-white transition",
             }}
           >
-            <CiUser size="30px" />
+            <CiUser id="user-icon" size="30px" />
           </IconContext.Provider>
         </Link>
       </div>

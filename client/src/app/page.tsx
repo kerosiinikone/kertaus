@@ -6,7 +6,6 @@ import { createPortal } from "react-dom";
 import ModalLoader from "@/components/ui/ModalLoader";
 import ScheduleWrapper from "@/app/schedules/_components/ScheduleWrapper";
 import ErrorMsg from "@/components/ui/ErrorMsg";
-import { useEffect } from "react";
 import { useGlobalErrorContext } from "@/context/Error/state";
 import { useCreateSchedule } from "./_hooks/useCreateSchedule";
 

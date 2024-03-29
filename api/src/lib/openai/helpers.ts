@@ -1,8 +1,6 @@
-import { openai } from "./index.js";
 import { CodeType, PromptInput } from "../../../../shared/index.js";
-import { DEFAULT_MODEL, RES_TYPE } from "./completions.js";
+import { requestSchedule } from "./completions.js";
 import { PRE_PROMPT } from "./prompts.js";
-import OpenAI from "openai";
 
 export const generatePrompt = (input: PromptInput) => {
   let topics: string;
@@ -25,41 +23,12 @@ export const generateInitialPrompt = (input: PromptInput) => {
   ];
 };
 
-export const parseRequestJSON = (message: string, input: PromptInput) => {
+export const parseRequestJSON = (message: string) => {
   try {
     const jsonResponse = JSON.parse(message);
     return jsonResponse;
   } catch (parseError) {
-    const fullResponseRequest = requestFullCompletion(message, input);
+    const fullResponseRequest = requestSchedule(null, message);
     return fullResponseRequest;
   }
-};
-
-export const requestFullCompletion = async (
-  partialRes: string,
-  input: PromptInput
-) => {
-  const params: OpenAI.Chat.ChatCompletionCreateParams = {
-    messages: [
-      { role: "system", content: partialRes, name: "setup" },
-      { role: "assistant", content: partialRes, name: "continue" },
-      {
-        role: "user",
-        content:
-          "Tee antamasi vastaus loppuun annettujen tietojen perusteella.",
-        name: "",
-      },
-    ],
-    model: DEFAULT_MODEL,
-    response_format: RES_TYPE,
-    temperature: 1,
-    max_tokens: 2048,
-    top_p: 1,
-  };
-  const completeData = await openai.chat.completions.create(params);
-  const final = completeData.choices[0].message.content;
-
-  const jsonResponse = parseRequestJSON(final, input);
-
-  return jsonResponse;
 };

@@ -11,25 +11,45 @@ export const RES_TYPE: ChatCompletionCreateParams.ResponseFormat = {
 export const DEFAULT_MODEL = process.env.AI_MODEL || "gpt-4-1106-preview";
 
 let RETRY_COUNT = 0;
+
 const MAX_RETRY_COUNT = 2;
 
-export const requestSchedule = async (input: PromptInput) => {
-  const params: OpenAI.Chat.ChatCompletionCreateParams = {
-    messages: [
-      { role: "system", content: PRE_PROMPT, name: "setup" },
-      { role: "user", content: generatePrompt(input), name: "schedule" },
-    ],
-    model: DEFAULT_MODEL,
-    response_format: RES_TYPE,
-    temperature: 0.7,
-    max_tokens: 2048,
-    top_p: 1,
-  };
+const BASE_OPTS = {
+  model: DEFAULT_MODEL,
+  response_format: RES_TYPE,
+  temperature: 0.7,
+  max_tokens: 2048,
+  top_p: 1,
+};
+
+export const requestSchedule = async (input: PromptInput, partial?: string) => {
+  const params: OpenAI.Chat.ChatCompletionCreateParams = partial
+    ? {
+        messages: [
+          { role: "system", content: PRE_PROMPT, name: "setup" },
+          { role: "user", content: generatePrompt(input), name: "schedule" },
+        ],
+        ...BASE_OPTS,
+      }
+    : {
+        messages: [
+          { role: "system", content: partial, name: "setup" },
+          { role: "assistant", content: partial, name: "continue" },
+          {
+            role: "user",
+            content:
+              "Tee antamasi vastaus loppuun annettujen tietojen perusteella.",
+            name: "",
+          },
+        ],
+        ...BASE_OPTS,
+      };
 
   try {
     const completeData = await openai.chat.completions.create(params);
     const final = completeData.choices[0].message.content;
-    const jsonResponse = parseRequestJSON(final, input);
+
+    const jsonResponse = parseRequestJSON(final);
 
     return jsonResponse;
   } catch (error) {
