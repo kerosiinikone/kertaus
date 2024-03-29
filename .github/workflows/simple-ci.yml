@@ -37,9 +37,11 @@ jobs:
       - name: Navigate to client directory
         run: cd ./client/
       - name: Install dependencies
-        run: npm ci
+        run: npm i
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+      - name: Build and Run Client
+        run: npm run build && npm run start
       - name: Run Playwright tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4
