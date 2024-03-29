@@ -2,6 +2,10 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  esbuild: {
+    target: "esnext",
+    platform: "node",
+  },
   test: {
     exclude: [
       "./client/e2e/**",
